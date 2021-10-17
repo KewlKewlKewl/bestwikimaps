@@ -1,0 +1,13 @@
+Detailed plan:
+- Sat 16: 
+  - Get ERD/wireframes/user-stories checked.
+  - Start and finish db.
+  - Figure out how both api's work.
+  - Start with back-end for get/ page, maybe /profile page
+- Sun 17: 
+  - Back-end for create and editing page - start and finish
+- Mon 18:
+  - Finish back-end by EOD
+- Tues 19: Start working on general CSS and front-end
+- Weds 20: Finish MVD (finishing front-end EOD)
+- Thurs 21: Do clean up and prep for presentation
