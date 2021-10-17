@@ -21,53 +21,84 @@
 
   <div id="map">
   </div>
+
+  <!-- Point Form -->
   <form id="pointForm">
     <label for="pointTitle">Point Title</label><br>
     <input type="text" name="pointTitle" id="pointTitle"><br>
     <label for="pointDescription">Point Description</label><br>
     <input type="text" name="pointDescription" id="pointDescription"><br>
-    <button type='submit' class='pointButton'>Submit</button>
+    <button type='submit' class='pointButton'>Create Point</button>
   </form>
-  <div id="marker_example">
-    LatLng Example
+
+  <!-- This is where the individual marker coords are displayed and fetched for the generation of each markers array element -->
+  <div id="marker_coords">
   </div>
 
-  <div id="pointsList"></div>
+  <!-- This is where all saved points are displayed -->
+  <div id="pointsList">
+  </div>
+
+<!-- Maps Form -->
+<form id="mapsForm">
+  <label for="mapTitle">Map Title</label><br>
+  <input type="text" name="mapTitle" id="mapTitle"><br>
+  <label for="mapDescription">Map Description</label><br>
+  <input type="text" name="mapDescription" id="mapDescription"><br>
+  <button type='submit' class='pointButton'>Save Map</button>
+</form>
   <!-- SCRIPTS -->
 <script>
 
   //Array of markers
-  var markers = [
+  const markers = [
       {
           coordinates:{lat:29.9841,lng:-90.1529},
           iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-          content:'<h1>Metarie, LA</h1>'
+          pointTitle:'test',
+          pointDescription:'test'
       },
       {
           coordinates:{lat:29.9146,lng:-90.0540},
-          content:'<h1>Gretna, LA</h1>'
+          pointTitle:'test',
+          pointDescription:'test'
       },
       {
           coordinates:{lat:30.4583,lng:-91.1403},
-          content:'<h1>Baton Rouge, LA</h1>'
+          pointTitle:'test',
+          pointDescription:'test'
       }
   ];
 
+  // this generates the individual point elements within div tags (displayed in #pointsList)
+  const generatePointsList = function(markers){
+      console.log("generatePointsList",markers);
+      let htmlString = "<h1>Points List</h1><br>";
+      for (let i = 0; i < markers.length; i++) {
+        htmlString += '<div> ';
+        htmlString += markers[i].pointTitle;
+        htmlString += '</div>';
+      }
+      document.getElementById("pointsList").innerHTML = htmlString;
+  };
+
+    // Initializes the Google map based on currently hard-coded lat, long values
     function initMap() {
-      var options = {  // Creates map options to add to the default map.
+      const options = {  // Creates map options to add to the default map.
           zoom:8,
           center:{lat:29.9511,lng:-90.0715}
       }
-      var map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
+      let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
 
       //Listen for click on map
       google.maps.event.addListener(map, 'click', function(event){
           addMarker({coordinates:event.latLng}); //Add marker
-          document.getElementById("marker_example").innerHTML=event.latLng.toUrlValue();
-          // document.getElementById("marker_example").innerHTML=12;
+          document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
+          // document.getElementById("marker_coords").innerHTML=12;
           // const coordinates = event.latLng;
         });
 
+      // Listens for the submission of the pointForm button which then creates a markerElement containing coordinates (lat, lng), pointTitle, pointDescription
       document.getElementById("pointForm").addEventListener('submit',(event) => {
         event.preventDefault();
         //console.log("event", event);
@@ -75,21 +106,23 @@
         markers.push(
           {
             coordinates: {
-              lat:document.getElementById("marker_example").innerHTML.split(',')[0],
-              lng:document.getElementById("marker_example").innerHTML.split(',')[1],
-              pointTitle: document.getElementById("pointTitle").value,
-              pointDescription: document.getElementById("pointDescription").value
-            }
+              lat:document.getElementById("marker_coords").innerHTML.split(',')[0],
+              lng:document.getElementById("marker_coords").innerHTML.split(',')[1]
+            },
+            pointTitle: document.getElementById("pointTitle").value,
+            pointDescription: document.getElementById("pointDescription").value
+
           }
         );
-        console.log(markers);
+        // console.log(markers);
+        generatePointsList(markers);
       });
 
       //Loop through markers
-      for(var i = 0;i < markers.length;i++) {
-          addMarker(markers[i]); //Add markers
-      }
-
+      // for(var i = 0;i < markers.length;i++) {
+      //     addMarker(markers[i]); //Add markers
+      // }
+      console.log('outside markers', markers);
 
 
       //Add Marker function
@@ -111,7 +144,7 @@
           }
 
           if(props.content) { //Check content
-            var infoWindow = new google.maps.InfoWindow({
+            let infoWindow = new google.maps.InfoWindow({
               content:props.content
             });
 
