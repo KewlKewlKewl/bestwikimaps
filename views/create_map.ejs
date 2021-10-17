@@ -21,18 +21,38 @@
 
   <div id="map">
   </div>
-  <form method=POST id="pointForm">
+  <form id="pointForm">
     <label for="pointTitle">Point Title</label><br>
-    <input type="text" name="pointTitle"><br>
+    <input type="text" name="pointTitle" id="pointTitle"><br>
     <label for="pointDescription">Point Description</label><br>
-    <input type="text" name="pointDescription"><br>
+    <input type="text" name="pointDescription" id="pointDescription"><br>
     <button type='submit' class='pointButton'>Submit</button>
   </form>
   <div id="marker_example">
     LatLng Example
   </div>
-<!-- SCRIPTS -->
+
+  <div id="pointsList"></div>
+  <!-- SCRIPTS -->
 <script>
+
+  //Array of markers
+  var markers = [
+      {
+          coordinates:{lat:29.9841,lng:-90.1529},
+          iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+          content:'<h1>Metarie, LA</h1>'
+      },
+      {
+          coordinates:{lat:29.9146,lng:-90.0540},
+          content:'<h1>Gretna, LA</h1>'
+      },
+      {
+          coordinates:{lat:30.4583,lng:-91.1403},
+          content:'<h1>Baton Rouge, LA</h1>'
+      }
+  ];
+
     function initMap() {
       var options = {  // Creates map options to add to the default map.
           zoom:8,
@@ -45,24 +65,25 @@
           addMarker({coordinates:event.latLng}); //Add marker
           document.getElementById("marker_example").innerHTML=event.latLng.toUrlValue();
           // document.getElementById("marker_example").innerHTML=12;
-      });
+          // const coordinates = event.latLng;
+        });
 
-      //Array of markers
-      var markers = [
+      document.getElementById("pointForm").addEventListener('submit',(event) => {
+        event.preventDefault();
+        //console.log("event", event);
+        //console.log("pointTitle", document.getElementById("pointTitle").value);
+        markers.push(
           {
-              coordinates:{lat:29.9841,lng:-90.1529},
-              iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-              content:'<h1>Metarie, LA</h1>'
-          },
-          {
-              coordinates:{lat:29.9146,lng:-90.0540},
-              content:'<h1>Gretna, LA</h1>'
-          },
-          {
-              coordinates:{lat:30.4583,lng:-91.1403},
-              content:'<h1>Baton Rouge, LA</h1>'
+            coordinates: {
+              lat:document.getElementById("marker_example").innerHTML.split(',')[0],
+              lng:document.getElementById("marker_example").innerHTML.split(',')[1],
+              pointTitle: document.getElementById("pointTitle").value,
+              pointDescription: document.getElementById("pointDescription").value
+            }
           }
-      ];
+        );
+        console.log(markers);
+      });
 
       //Loop through markers
       for(var i = 0;i < markers.length;i++) {
@@ -81,9 +102,9 @@
 
           // testing for coordinates retrieval
           // coordinates:{lat:29.9841,lng:-90.1529},
-          markers.push({ coordinates: {lat:props.coordinates.lat(), lng:props.coordinates.lng()}});
-          console.log(markers);
-          console.log(props.coordinates);
+          //markers.push({ coordinates: {lat:props.coordinates.lat(), lng:props.coordinates.lng()}});
+          //console.log(markers);
+          //console.log(props.coordinates);
 
           if(props.iconImage) {  //Check for custom icon
             marker.setIcon(props.iconImage); //Set icon image
