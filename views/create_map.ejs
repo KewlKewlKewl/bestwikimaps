@@ -28,7 +28,7 @@
     <input type="text" name="pointTitle" id="pointTitle"><br>
     <label for="pointDescription">Point Description</label><br>
     <input type="text" name="pointDescription" id="pointDescription"><br>
-    <label for="cars">Choose a car:</label>
+    <label for="category">Choose a category:</label>
     <select name="category" id="category">
       <option value="Food">Food</option>
       <option value="Shopping">Shopping</option>
@@ -43,8 +43,8 @@
   </div>
 
   <!-- This is where all saved points are displayed -->
-  <div id="pointsList">
-  </div>
+  <table id="pointsList">
+  </table>
 
 <!-- Maps Form -->
 <form id="mapsForm">
@@ -84,15 +84,34 @@
 
   // this generates the individual point elements within div tags (displayed in #pointsList)
   const generatePointsList = function(markers){
-      console.log("generatePointsList",markers);
-      let htmlString = "<h1>Points List</h1><br>";
-      for (let i = 0; i < markers.length; i++) {
-        htmlString += '<div> ';
-        htmlString += markers[i].pointTitle;
-        htmlString += '</div>';
-      }
-      document.getElementById("pointsList").innerHTML = htmlString;
-  };
+    console.log("generatePointsList",markers);
+
+    /////// OLD code
+    // let htmlString = "<h1>Points List</h1><br>";
+    // for (let i = 0; i < markers.length; i++) {
+    //   htmlString += '<div> ';
+    //   htmlString += markers[i].pointTitle;
+    //   htmlString += '</div>';
+    // }
+    // document.getElementById("pointsList").innerHTML = htmlString;
+
+    let t = `<tr>
+                <th >Title</th>
+                <th>Description</th>
+                <th>Lat,Long</th>
+                <th>(delete)</th>
+            </tr>`;
+    for (let i = 0; i < markers.length; i++){
+      let tr = "<tr>";
+      tr += "<td>"+markers[i].pointTitle+"</td>";
+      tr += "<td>"+markers[i].pointDescription+"</td>";
+      tr += "<td>"+markers[i].coordinates.lat+", "+markers[i].coordinates.lng+"</td>";
+      tr += "<td>"+"delete icon here"+"</td>";
+      tr += "</tr>";
+      t += tr;
+    }
+      document.getElementById("pointsList").innerHTML = t;
+    };
 
     // Initializes the Google map based on currently hard-coded lat, long values
     function initMap() {
