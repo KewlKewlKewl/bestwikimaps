@@ -70,6 +70,8 @@
       }
   ];
 
+
+
   // this generates the individual point elements within div tags (displayed in #pointsList)
   const generatePointsList = function(markers){
       console.log("generatePointsList",markers);
@@ -116,6 +118,33 @@
         );
         // console.log(markers);
         generatePointsList(markers);
+      });
+
+      document.getElementById("mapsForm").addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        // $.post('/api/maps/create',
+        // {
+        //   markers,
+        //   mapTitle: document.getElementById("mapTitle").value,
+        //   mapDescription: document.getElementById("mapDescription").value
+        // });
+
+        $.ajax({
+          url: '/api/maps/create',
+          method: "POST",
+          data: {
+            markers,
+            mapTitle: document.getElementById("mapTitle").value,
+            mapDescription: document.getElementById("mapDescription").value
+            }
+        })
+        .then((result)=>{
+          //does nothing
+        })
+        .catch((error)=>{
+          console.log('error:',error);
+        });
       });
 
       //Loop through markers
