@@ -18,7 +18,16 @@
 </head>
 <body>
   <h1>Your New Map!</h1>
+<!-- City Form -->
+<form id="cityForm">
+  <label for="cityName">City Name</label><br>
+  <input type="text" name="cityName" id="cityName"><br>
+  <label for="countryName">Country Name</label><br>
+  <input type="text" name="countryName" id="countryName"><br>
+  <button type='submit' class='cityCountryButton'>Show map!</button>
+</form>
 
+<!-- Map -->
   <div id="map">
   </div>
 
@@ -115,11 +124,32 @@
 
     // Initializes the Google map based on currently hard-coded lat, long values
     function initMap() {
+      //set up initial map for New Orleans as default
       const options = {  // Creates map options to add to the default map.
           zoom:8,
           center:{lat:29.9511,lng:-90.0715}
       }
+      //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
       let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
+
+      //render map of user input location (for now, Vancouver or Calgary only)
+      document.getElementById("cityForm").addEventListener('submit', () => {
+        event.preventDefault();
+        let cityName = document.getElementById("cityName").value;
+        //console.log("cityName",cityName);
+        if (cityName === "Vancouver") {
+          map.setCenter({
+            lat: 49.2827,
+            lng: -123.1207
+          });
+        }
+        if (cityName === "Calgary") {
+          map.setCenter({
+            lat: 51.0447,
+            lng: -114.0719
+          });
+        }
+      });
 
       //Listen for click on map
       google.maps.event.addListener(map, 'click', function(event){
