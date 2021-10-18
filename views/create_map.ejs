@@ -28,6 +28,13 @@
     <input type="text" name="pointTitle" id="pointTitle"><br>
     <label for="pointDescription">Point Description</label><br>
     <input type="text" name="pointDescription" id="pointDescription"><br>
+    <label for="cars">Choose a car:</label>
+    <select name="category" id="category">
+      <option value="Food">Food</option>
+      <option value="Shopping">Shopping</option>
+      <option value="Nature">Nature</option>
+      <option value="Nightlife">Nightlife</option>
+    </select>
     <button type='submit' class='pointButton'>Create Point</button>
   </form>
 
@@ -56,17 +63,20 @@
           coordinates:{lat:29.9841,lng:-90.1529},
           iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
           pointTitle:'test',
-          pointDescription:'test'
+          pointDescription:'test',
+          category:'Food'
       },
       {
           coordinates:{lat:29.9146,lng:-90.0540},
           pointTitle:'test',
-          pointDescription:'test'
+          pointDescription:'test',
+          category:'Shopping'
       },
       {
           coordinates:{lat:30.4583,lng:-91.1403},
           pointTitle:'test',
-          pointDescription:'test'
+          pointDescription:'test',
+          category:'Nightlife'
       }
   ];
 
@@ -112,8 +122,8 @@
               lng:document.getElementById("marker_coords").innerHTML.split(',')[1]
             },
             pointTitle: document.getElementById("pointTitle").value,
-            pointDescription: document.getElementById("pointDescription").value
-
+            pointDescription: document.getElementById("pointDescription").value,
+            category: document.getElementById("category").value
           }
         );
         // console.log(markers);
