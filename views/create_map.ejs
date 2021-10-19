@@ -75,25 +75,25 @@
 
   //Array of marker data (this is what's later inserted into the points DB so it has to contain only what we want saved)
   const markers = [
-      {
-          coordinates:{lat:29.9841,lng:-90.1529},
-          iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-          pointTitle:'test1',
-          pointDescription:'test1',
-          category:'Food'
-      },
-      {
-          coordinates:{lat:29.9146,lng:-90.0540},
-          pointTitle:'test2',
-          pointDescription:'test2',
-          category:'Shopping'
-      },
-      {
-          coordinates:{lat:30.4583,lng:-91.1403},
-          pointTitle:'test3',
-          pointDescription:'test3',
-          category:'Nightlife'
-      }
+      // {
+      //     coordinates:{lat:29.9841,lng:-90.1529},
+      //     iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+      //     pointTitle:'test1',
+      //     pointDescription:'test1',
+      //     category:'Food'
+      // },
+      // {
+      //     coordinates:{lat:29.9146,lng:-90.0540},
+      //     pointTitle:'test2',
+      //     pointDescription:'test2',
+      //     category:'Shopping'
+      // },
+      // {
+      //     coordinates:{lat:30.4583,lng:-91.1403},
+      //     pointTitle:'test3',
+      //     pointDescription:'test3',
+      //     category:'Nightlife'
+      // }
   ];
 
   // sets all of the points back on the map
@@ -101,6 +101,12 @@
         for (let i = 0; i < visualMarkers.length; i++) {
         visualMarkers[i].setMap(map);
         }
+  }
+
+  function removeMarkers() {
+    for(let i = 0; i < visualMarkers.length; i++){
+        visualMarkers[i].setMap(null);
+    }
   }
 
   // this generates the individual point elements within div tags (displayed in #pointsList)
@@ -129,13 +135,11 @@
       document.getElementById("pointsList").innerHTML = t;
     };
 
-    // event listener for clicks onto any "delete point" button - removes the HTML element and marker from markers array (so it's not submitted to the DB when we save the map)
+    // simple reference to the pointsTable
     const pointsTable = document.getElementById('pointsList');
-    pointsTable.addEventListener('click', (event) => {
 
-      // commented out console logs in case you want to see what these parentNodes actually look like
-      // console.log(event.target.parentNode.parentNode.id);
-      // console.log(event.target.parentNode);
+    // event listener for clicks onto any "delete point" button - removes the HTML element and marker from markers array (so it's not submitted to the DB when we save the map)
+    pointsTable.addEventListener('click', (event) => {
 
       // if you click anywhere in the table aside from the removeItem button - it does nothing
       if (!event.target.classList.contains('removeItem')) {
@@ -148,22 +152,32 @@
       // this counter keeps track of the marker index that we removed from the markers array
       let removedMarkerIndex = 0;
 
-      // removes the marker from the markers array using the pointTitle - WARNING, each point title must be unique using this logic
+      // find the index of the marker from the markers array using the pointTitle - this index is then used to remove the marker from the markers list and to remove the visual marker - WARNING, each point title must be unique using this logic
       for (let i = 0; i < markers.length; i++) {
         if (markers[i].pointTitle === deletedPointTitle) {
           removedMarkerIndex = i;
           console.log(markers);
+          // console.log(removedMarkerIndex);
         }
       }
 
-      console.log('before the visualMarker loop');
+      console.log(markers[removedMarkerIndex].coordinates.lat);
+      console.log(visualMarkers[0].position.lat().toFixed(5));
+      console.log(markers[removedMarkerIndex].coordinates.lng);
+      console.log(visualMarkers[0].position.lng().toFixed(5));
+
+      // saves the respect lat and lng for the removed marker from the markers array
+      let markerLat = markers[removedMarkerIndex].coordinates.lat;
+      let markerLng = markers[removedMarkerIndex].coordinates.lng;
 
       for (let j = 0; j < visualMarkers.length; j++) {
-        if (markers[removedMarkerIndex].coordinates.lat == visualMarkers[j].position.lat() && markers[removedMarkerIndex].coordinates.lng == visualMarkers[j].position.lng()) {
+        // the marketLat and markerLng are not fixed length or integer types so the only way to have these equal the coords for the visualMarker is to convert to float then to fixed decimal places
+        if (parseFloat(markerLat).toFixed(4) === visualMarkers[j].position.lat().toFixed(4) && parseFloat(markerLng).toFixed(4) === visualMarkers[j].position.lng().toFixed(4)) {
+          removeMarkers();
           visualMarkers.splice(j, 1);
+          setMapOnAll(map);
         }
       }
-      console.log('after the visualMarker loop');
 
       // this removes the marker (aka point) we deleted from the markers array
       markers.splice(removedMarkerIndex, 1);
@@ -172,7 +186,6 @@
       event.preventDefault();
 
       // This re-sets the map with points
-      setMapOnAll(map);
 
       // this deletes the actual HTML element from the DOM
       event.target.parentNode.parentNode.remove();
