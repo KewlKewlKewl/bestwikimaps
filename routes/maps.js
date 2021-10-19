@@ -36,6 +36,26 @@ module.exports = (db) => {
     });
   })
 
+  router.post('/:mapid/delete', (req,res) => {
+    const mapID = req.params.mapid
+    // console.log(mapID)
+    // console.log(req)
+    const queryString = `DELETE FROM maps WHERE id = $1;`
+    const values = [`${mapID}`]
+
+    db.query(queryString, values)
+    .then(data => {
+      const queryObj = data.rows;
+      console.log(queryObj);
+      res.redirect('/api/maps/index')
+    })
+    .catch(err => {
+      console.log('DELETE MAP ERR:', err);
+      res
+        .status(500)
+    });
+  })
+
   router.post('/create', (req, res) => {
     // console.log("req.body",req.body)
     const markers = req.body.markers;
@@ -66,5 +86,4 @@ module.exports = (db) => {
     });
 
     return router;
-
 };
