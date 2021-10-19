@@ -1,72 +1,80 @@
 // Client facing scripts here
 $(document).ready(function(){
 
-  const renderLastFavourited = function(imgURL) {
+  const renderLastFavourited = function(result) {
     //input: imgURL as a string
     //updates '#lastFavouritedMap' div with preview_img of last fav img
     $lastFavouritedMapImg = $(`
-    <img src="${imgURL}" alt="My Last Favourite Map">
+    <h1>Last Favourited Map</h1>
+    <a href="/api/maps/${result.map_id}"><img src="${result.preview_image}" alt="My Last Favourite Map"></a>
+    <p>${result.title}</p>
     `);
     $('#lastFavouritedMap').append($lastFavouritedMapImg);
     return;
   }
 
-  // const escape = function (str) {
-  //   let div = document.createElement("div");
-  //   div.appendChild(document.createTextNode(str));
-  //   return div.innerHTML;
-  // };
-
   const renderRowOf3Maps = function(resultsMaps) {
-    for (let map in resultsMaps) {
+    for (let map of resultsMaps) {
       $eachMapImg = $(`
-      <img src="${map.preview_img}" alt="a popular map">
+      <div class="eachMapImg">
+      <a href="/api/maps/${map.id}"><img src="${map.preview_image}" alt="a popular map"></a>
+      <p>${map.title}</p>
+      </div>
       `);
       $('#rowOf3Maps').append($eachMapImg);
     }
     return;
   }
 
-  $('.favouriteThisImg').on("click", function(event){
-    event.preventDefault();
-    let textEntered = $(this).serialize().slice(5);
+  // $('.favouriteThisImg').on("click", function(event){
+  //   event.preventDefault();
+  //   let textEntered = $(this).serialize().slice(5);
 
-    $.ajax({
-      url: '/tweets/',
-      method: "POST",
-      data: $(this).serialize()
-    })
-    .then((result)=>{
+  //   $.ajax({
+  //     url: '/tweets/',
+  //     method: "POST",
+  //     data: $(this).serialize()
+  //   })
+  //   .then((result)=>{
 
-    })
-    .catch((error)=>{
-      console.log('error:',error);
-    });
+  //   })
+  //   .catch((error)=>{
+  //     console.log('error:',error);
+  //   });
 
-  });
+  // });
 
   const loadImgs = function() {
+    console.log("loadImgs inside???");
     $.ajax({
-      url: '/',
+      url: '/api/maps/favourite',
       method: "GET"
     })
     .then((result)=>{
       //where 'result' is an array:
       //result[0] = 1 object with the last favourited map
       //result[1] = 3 objects where each is a map
-      renderLastFavourited(result[0].preview_img);
-      return result;
+      console.log("result in ajax then:", result);
+      renderLastFavourited(result[0]);
+      //return result;
+    })
+    .then(()=> {
+    //.then (//add another get request here for the 3 maps??)
+      console.log("line58");
+      $.get("/api/maps/rowOf3", (resultsArray) => {
+        renderRowOf3Maps(resultsArray);
+      });
     })
     .then((result)=>{
       //where 'result' is an array:
       //result[0] = 1 object with the last favourited map
       //result[1] = 3 objects where each is a map
-      renderRowOf3Maps(result[1]);
+      // renderRowOf3Maps(resultsMaps);
     })
     .catch((error)=>{
       console.log('error:',error);
     });
   }
 
-  loadTweets();
+  loadImgs();
 });
