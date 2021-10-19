@@ -76,17 +76,19 @@
     let t = `<tr>
                 <th >Title</th>
                 <th>Description</th>
-                <th>Lat,Long</th>
+                <th>Lat</th>
+                <th>Long</th>
                 <th>Category</th>
-                <th>Delete</th>
+                <th>Delete Point</th>
             </tr>`;
     for (let i = 0; i < markers.length; i++){
       let tr = "<tr>";
       tr += "<td>"+markers[i].pointTitle+"</td>";
       tr += "<td>"+markers[i].pointDescription+"</td>";
-      tr += "<td>"+markers[i].coordinates.lat+", "+markers[i].coordinates.lng+"</td>";
+      tr += "<td id = 'lat'>"+markers[i].coordinates.lat+"</td>";
+      tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
       tr += "<td>"+markers[i].category+"</td>"
-      tr += "<td>"+"delete icon here"+"</td>";
+      tr += "<td>"+`<input type='button' value='Delete Point' class='removeItem'>`+"</td>";
       tr += "</tr>";
       t += tr;
     }
@@ -122,13 +124,16 @@
       //   }
       // });
 
+      // Listen for click on map
       //Listen for click on map
-      // google.maps.event.addListener(map, 'click', function(event){
-      //     addMarker({coordinates:event.latLng}); //Add marker
-      //     document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
-      //     // document.getElementById("marker_coords").innerHTML=12;
-      //     // const coordinates = event.latLng;
-      //   });
+      google.maps.event.addListener(map, 'click', function(event){
+          addMarker({coordinates:event.latLng}); //Add marker
+          // setMapOnAll(map);
+          // document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
+          console.log(visualMarkers[0].position.lat());
+          console.log(visualMarkers[0].position.lng());
+        });
+
 
       // Listens for the submission of the pointForm button which then creates a markerElement containing coordinates (lat, lng), pointTitle, pointDescription
       // document.getElementById("pointForm").addEventListener('submit',(event) => {
