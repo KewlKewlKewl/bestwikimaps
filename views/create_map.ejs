@@ -55,20 +55,25 @@
   <table id="pointsList">
   </table>
 
-<!-- Maps Form -->
-<form id="mapsForm">
-  <label for="mapTitle">Map Title</label><br>
-  <input type="text" name="mapTitle" id="mapTitle"><br>
-  <label for="mapDescription">Map Description</label><br>
-  <input type="text" name="mapDescription" id="mapDescription"><br>
-  <button type='submit' class='pointButton'>Save Map</button>
-</form>
+  <!-- Maps Form -->
+  <form id="mapsForm">
+    <label for="mapTitle">Map Title</label><br>
+    <input type="text" name="mapTitle" id="mapTitle"><br>
+    <label for="mapDescription">Map Description</label><br>
+    <input type="text" name="mapDescription" id="mapDescription"><br>
+    <button type='submit' class='pointButton'>Save Map</button>
+  </form>
+
   <!-- SCRIPTS -->
 <script>
 
-const visualMarkers = [];
+  // initializes map variable which will store the map we set below - is needed so we can access the map in the remove point from pointsList event listener
 
-  //Array of marker data (this is what's later inserted into the points DB)
+  let map;
+
+  const visualMarkers = [];
+
+  //Array of marker data (this is what's later inserted into the points DB so it has to contain only what we want saved)
   const markers = [
       {
           coordinates:{lat:29.9841,lng:-90.1529},
@@ -91,7 +96,12 @@ const visualMarkers = [];
       }
   ];
 
-
+  // sets all of the points back on the map
+  function setMapOnAll(map) {
+        for (let i = 0; i < visualMarkers.length; i++) {
+        visualMarkers[i].setMap(map);
+        }
+  }
 
   // this generates the individual point elements within div tags (displayed in #pointsList)
   const generatePointsList = function(markers){
@@ -122,37 +132,50 @@ const visualMarkers = [];
     // event listener for clicks onto any "delete point" button - removes the HTML element and marker from markers array (so it's not submitted to the DB when we save the map)
     const pointsTable = document.getElementById('pointsList');
     pointsTable.addEventListener('click', (event) => {
-      console.log(event.target.parentNode.parentNode.id);
-      console.log(event.target.parentNode);
+
+      // commented out console logs in case you want to see what these parentNodes actually look like
+      // console.log(event.target.parentNode.parentNode.id);
+      // console.log(event.target.parentNode);
+
+      // if you click anywhere in the table aside from the removeItem button - it does nothing
       if (!event.target.classList.contains('removeItem')) {
         return;
       }
-      // determines the point title of the row we just deleted to also remove it from the markers table
-      const deletedPointTitle = event.target.parentNode.parentNode.id;
-      // console.log(markers);
 
-      // removes the marker from the markers array using the id - WARNING, each point title must be unique
+      // if you did click on the removeItem button - this determines the point title of the row we just deleted to also remove it from the markers table
+      const deletedPointTitle = event.target.parentNode.parentNode.id;
+
+      // this counter keeps track of the marker index that we removed from the markers array
+      let removedMarkerIndex = 0;
+
+      // removes the marker from the markers array using the pointTitle - WARNING, each point title must be unique using this logic
       for (let i = 0; i < markers.length; i++) {
         if (markers[i].pointTitle === deletedPointTitle) {
-          // this removes the marker (aka point) we deleted from the markers array
-          markers.splice(i, 1);
+          removedMarkerIndex = i;
           console.log(markers);
         }
       }
+
       console.log('before the visualMarker loop');
-      for (const visualMarker of visualMarkers) {
-        for (let j = 0; j < markers.length; j++) {
-          if (markers[j].coordinates.lat == visualMarker.coordinates.lat() && markers[j].coordinates.lng == visualMarker.coordinates.lng()) {
-            visualMarker.setMap(null);
-            setMapOnAll(map);
-          }
+
+      for (let j = 0; j < visualMarkers.length; j++) {
+        if (markers[removedMarkerIndex].coordinates.lat == visualMarkers[j].position.lat() && markers[removedMarkerIndex].coordinates.lng == visualMarkers[j].position.lng()) {
+          visualMarkers.splice(j, 1);
         }
       }
       console.log('after the visualMarker loop');
 
+      // this removes the marker (aka point) we deleted from the markers array
+      markers.splice(removedMarkerIndex, 1);
+
+      // I think* this is for the button's functionality but I haven't noticed it actually do anything yet
+      event.preventDefault();
+
+      // This re-sets the map with points
+      setMapOnAll(map);
+
       // this deletes the actual HTML element from the DOM
       event.target.parentNode.parentNode.remove();
-      event.preventDefault();
 
     });
 
@@ -164,15 +187,7 @@ const visualMarkers = [];
           center:{lat:29.9511,lng:-90.0715}
       }
       //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
-      let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options
-
-      function setMapOnAll(map) {
-        for (let i = 0; i < visualMarkers.length; i++) {
-        visualMarkers[i].setMap(map);
-        }
-      }
-
-      setMapOnAll(map);
+      map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options
 
       //render map of user input location (for now, Vancouver or Calgary only)
       document.getElementById("cityForm").addEventListener('submit', () => {
@@ -198,8 +213,8 @@ const visualMarkers = [];
           addMarker({coordinates:event.latLng}); //Add marker
           // setMapOnAll(map);
           document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
-          console.log(visualMarkers[0].coordinates.lat());
-          console.log(visualMarkers[0].coordinates.lng());
+          console.log(visualMarkers[0].position.lat());
+          console.log(visualMarkers[0].position.lng());
         });
 
       // Listens for the submission of the pointForm button which then creates a markerElement containing coordinates (lat, lng), pointTitle, pointDescription
@@ -251,8 +266,10 @@ const visualMarkers = [];
               map:map,
           });
           // sends newly created marker into visualMarkers array with the coordinates
-          visualMarkers.push({marker, coordinates: props.coordinates});
+          visualMarkers.push(marker);
           console.log("just updated visualMarkers:", visualMarkers)
+
+          // visualMarkers.push({marker, coordinates: props.coordinates});
 
           // if(props.iconImage) {  //Check for custom icon
           //   marker.setIcon(props.iconImage); //Set icon image
