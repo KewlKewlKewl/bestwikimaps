@@ -85,5 +85,47 @@ module.exports = (db) => {
       });
     });
 
-    return router;
+  router.get('/favourite', (req, res) => {
+    console.log("index_routes_hi??");
+    const queryFaveMaps = `
+    SELECT *
+    FROM maps
+    JOIN favourites ON maps.id = map_id
+    WHERE favourites.user_id = $1
+    LIMIT 1;
+    `;
+
+    db.query(queryFaveMaps, ['1']) //query last favourited map
+      .then((results) => {
+        console.log("myfavemap:", results.rows);
+        res.json(results.rows);
+      })
+      .catch(err => {
+        console.error('points_err:', err.message);
+        res
+          .status(500)
+      });
+    });
+
+  router.get('/rowOf3', (req, res) => {
+    console.log('inside row3?')
+    const query3Imgs = `
+    SELECT *
+    FROM maps
+    LIMIT 3;
+    `;
+    db.query(query3Imgs)
+      .then((results) => {
+        console.log("3 maps:", results.rows);
+        res.json(results.rows);
+      })
+      .catch(err => {
+        console.error('points_err:', err.message);
+        res
+          .status(500)
+      });
+    });
+
+  return router;
+
 };

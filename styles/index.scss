@@ -1,0 +1,30 @@
+// See: https://sass-lang.com/
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#rowOf3Maps {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#rowOf3Maps .eachMapImg{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#rowOf3Maps img {
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+
+
