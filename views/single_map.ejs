@@ -39,7 +39,7 @@
   </form>
 
   <!-- Maps Edit (Leads to adding or deleting pins on the selected map) -->
-  <form id='edit-map' method='POST' ACTION='/api/maps/<%= queryObj[0].map_id %>/edit'>
+  <form id='edit-map' method='GET' ACTION='/api/maps/<%= queryObj[0].map_id %>/edit'>
     <button type='submit'>EDIT MAP</button>
   </form>
 
