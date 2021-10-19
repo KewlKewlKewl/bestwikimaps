@@ -121,7 +121,7 @@
                 <th>Delete Point</th>
             </tr>`;
     for (let i = 0; i < markers.length; i++){
-      let tr = `<tr id = ${markers[i].pointTitle}>`;
+      let tr = `<tr id = "${markers[i].pointTitle}">`;
       tr += "<td>"+markers[i].pointTitle+"</td>";
       tr += "<td>"+markers[i].pointDescription+"</td>";
       tr += "<td id = 'lat'>"+markers[i].coordinates.lat+"</td>";
