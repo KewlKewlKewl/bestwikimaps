@@ -17,11 +17,58 @@ module.exports = (db) => {
     res.render("create_map");
   });
 
+  router.get('/favourite', (req, res) => {
+    console.log("index_routes_hi??");
+    const queryFaveMaps = `
+    SELECT *
+    FROM maps
+    JOIN favourites ON maps.id = map_id
+    WHERE favourites.user_id = $1
+    LIMIT 1;
+    `;
+
+    db.query(queryFaveMaps, ['1']) //query last favourited map
+      .then((results) => {
+        console.log("querytrue1");
+        console.log("myfavemap:", results.rows);
+        res.json(results.rows);
+      })
+      .catch(err => {
+        console.error('points_err:', err.message);
+        res
+          .status(500)
+      });
+    });
+
+    router.get('/rowOf3', (req, res) => {
+      console.log('inside row3?')
+      const query3Imgs = `
+      SELECT *
+      FROM maps
+      LIMIT 3;
+      `;
+      db.query(query3Imgs)
+        .then((results) => {
+          console.log("3 maps:", results.rows);
+          res.json(results.rows);
+        })
+        .catch(err => {
+          console.error('points_err:', err.message);
+          res
+            .status(500)
+        });
+      });
+
   router.get('/:mapid', (req,res) => {
     const mapID = req.params.mapid //need to have a request coming with the mapid of the selected map
-    // console.log(mapID)
-    const queryString = `SELECT maps.title AS map_title, maps.description AS map_desc, points.*, users.name AS owner FROM maps JOIN points ON maps.id = map_id JOIN users on maps.user_id = users.id WHERE map_id = $1;`
-    const values = [`${mapID}`]
+    console.log(mapID);
+    const queryString = `
+    SELECT maps.title AS map_title, maps.description AS map_desc, points.*, users.name AS owner
+    FROM maps
+    JOIN points ON maps.id = map_id
+    JOIN users on maps.user_id = users.id
+    WHERE map_id = $1;`;
+    const values = [`${mapID}`];
     db.query(queryString, values)
     .then(data => {
       const queryObj = data.rows;
@@ -47,7 +94,7 @@ module.exports = (db) => {
     .then(data => {
       const queryObj = data.rows;
       console.log(queryObj);
-      res.redirect('/api/maps/index')
+      res.redirect('/api/maps/create')
     })
     .catch(err => {
       console.log('DELETE MAP ERR:', err);
@@ -78,47 +125,6 @@ module.exports = (db) => {
     .then(() => {
       generatePoints(markers); //query+insert points data second. inside promise.then to ensure that this chains after map creation
     })
-      .catch(err => {
-        console.error('points_err:', err.message);
-        res
-          .status(500)
-      });
-    });
-
-  router.get('/favourite', (req, res) => {
-    console.log("index_routes_hi??");
-    const queryFaveMaps = `
-    SELECT *
-    FROM maps
-    JOIN favourites ON maps.id = map_id
-    WHERE favourites.user_id = $1
-    LIMIT 1;
-    `;
-
-    db.query(queryFaveMaps, ['1']) //query last favourited map
-      .then((results) => {
-        console.log("myfavemap:", results.rows);
-        res.json(results.rows);
-      })
-      .catch(err => {
-        console.error('points_err:', err.message);
-        res
-          .status(500)
-      });
-    });
-
-  router.get('/rowOf3', (req, res) => {
-    console.log('inside row3?')
-    const query3Imgs = `
-    SELECT *
-    FROM maps
-    LIMIT 3;
-    `;
-    db.query(query3Imgs)
-      .then((results) => {
-        console.log("3 maps:", results.rows);
-        res.json(results.rows);
-      })
       .catch(err => {
         console.error('points_err:', err.message);
         res

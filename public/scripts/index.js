@@ -56,7 +56,6 @@ $(document).ready(function(){
       //result[1] = 3 objects where each is a map
       console.log("result in ajax then:", result);
       renderLastFavourited(result[0]);
-      //return result;
     })
     .then(()=> {
     //.then (//add another get request here for the 3 maps??)
