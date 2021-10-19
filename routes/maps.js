@@ -9,11 +9,32 @@ const express = require('express');
 const router  = express.Router();
 const generateRandomString = require('../public/scripts/generate_string.js');
 
+
+
 module.exports = (db) => {
 
   router.get('/create', (req, res) => {
     res.render("create_map");
   });
+
+  router.get('/:mapid', (req,res) => {
+    const mapID = req.params.mapid //need to have a request coming with the mapid of the selected map
+    // console.log(mapID)
+    const queryString = `SELECT maps.title AS map_title, maps.description AS map_desc, points.*, users.name AS owner FROM maps JOIN points ON maps.id = map_id JOIN users on maps.user_id = users.id WHERE map_id = $1;`
+    const values = [`${mapID}`]
+    db.query(queryString, values)
+    .then(data => {
+      const queryObj = data.rows;
+      console.log(queryObj);
+      const templateVars = { queryObj }
+      res.render('single_map', templateVars);
+    })
+    .catch(err => {
+      console.log('GET single_map err:', err);
+      res
+        .status(500)
+    });
+  })
 
   router.post('/create', (req, res) => {
     // console.log("req.body",req.body)
