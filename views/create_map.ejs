@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #map {
+        height: 400px;
+        width: 75%;
+    }
+  </style>
+<!-- Requiring jQuery from host server -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="scripts/create_map.js"></script> -->
+
+</head>
+<body>
+  <h1>Your New Map!</h1>
+<!-- City Form -->
+<form id="cityForm">
+  <label for="cityName">City Name</label><br>
+  <input type="text" name="cityName" id="cityName"><br>
+  <label for="countryName">Country Name</label><br>
+  <input type="text" name="countryName" id="countryName"><br>
+  <button type='submit' class='cityCountryButton'>Show map!</button>
+</form>
+
+<!-- Map -->
+  <div id="map">
+  </div>
+
+  <!-- Point Form -->
+  <form id="pointForm">
+    <label for="pointTitle">Point Title</label><br>
+    <input type="text" name="pointTitle" id="pointTitle"><br>
+    <label for="pointDescription">Point Description</label><br>
+    <input type="text" name="pointDescription" id="pointDescription"><br>
+    <label for="category">Choose a category:</label>
+    <select name="category" id="category">
+      <option value="Food">Food</option>
+      <option value="Shopping">Shopping</option>
+      <option value="Nature">Nature</option>
+      <option value="Nightlife">Nightlife</option>
+    </select>
+    <button type='submit' class='pointButton'>Create Point</button>
+  </form>
+
+  <!-- This is where the individual marker coords are displayed and fetched for the generation of each markers array element -->
+  <div id="marker_coords">
+  </div>
+
+  <!-- This is where all saved points are displayed -->
+  <table id="pointsList">
+  </table>
+
+<!-- Maps Form -->
+<form id="mapsForm">
+  <label for="mapTitle">Map Title</label><br>
+  <input type="text" name="mapTitle" id="mapTitle"><br>
+  <label for="mapDescription">Map Description</label><br>
+  <input type="text" name="mapDescription" id="mapDescription"><br>
+  <button type='submit' class='pointButton'>Save Map</button>
+</form>
+  <!-- SCRIPTS -->
+<script>
+
+  //Array of markers
+  const markers = [
+      {
+          coordinates:{lat:29.9841,lng:-90.1529},
+          iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+          pointTitle:'test',
+          pointDescription:'test',
+          category:'Food'
+      },
+      {
+          coordinates:{lat:29.9146,lng:-90.0540},
+          pointTitle:'test',
+          pointDescription:'test',
+          category:'Shopping'
+      },
+      {
+          coordinates:{lat:30.4583,lng:-91.1403},
+          pointTitle:'test',
+          pointDescription:'test',
+          category:'Nightlife'
+      }
+  ];
+
+
+
+  // this generates the individual point elements within div tags (displayed in #pointsList)
+  const generatePointsList = function(markers){
+    console.log("generatePointsList",markers);
+
+    /////// OLD code
+    // let htmlString = "<h1>Points List</h1><br>";
+    // for (let i = 0; i < markers.length; i++) {
+    //   htmlString += '<div> ';
+    //   htmlString += markers[i].pointTitle;
+    //   htmlString += '</div>';
+    // }
+    // document.getElementById("pointsList").innerHTML = htmlString;
+
+    let t = `<tr>
+                <th >Title</th>
+                <th>Description</th>
+                <th>Lat,Long</th>
+                <th>(delete)</th>
+            </tr>`;
+    for (let i = 0; i < markers.length; i++){
+      let tr = "<tr>";
+      tr += "<td>"+markers[i].pointTitle+"</td>";
+      tr += "<td>"+markers[i].pointDescription+"</td>";
+      tr += "<td>"+markers[i].coordinates.lat+", "+markers[i].coordinates.lng+"</td>";
+      tr += "<td>"+"delete icon here"+"</td>";
+      tr += "</tr>";
+      t += tr;
+    }
+      document.getElementById("pointsList").innerHTML = t;
+    };
+
+    // Initializes the Google map based on currently hard-coded lat, long values
+    function initMap() {
+      //set up initial map for New Orleans as default
+      const options = {  // Creates map options to add to the default map.
+          zoom:8,
+          center:{lat:29.9511,lng:-90.0715}
+      }
+      //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
+      let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
+
+      //render map of user input location (for now, Vancouver or Calgary only)
+      document.getElementById("cityForm").addEventListener('submit', () => {
+        event.preventDefault();
+        let cityName = document.getElementById("cityName").value;
+        //console.log("cityName",cityName);
+        if (cityName === "Vancouver") {
+          map.setCenter({
+            lat: 49.2827,
+            lng: -123.1207
+          });
+        }
+        if (cityName === "Calgary") {
+          map.setCenter({
+            lat: 51.0447,
+            lng: -114.0719
+          });
+        }
+      });
+
+      //Listen for click on map
+      google.maps.event.addListener(map, 'click', function(event){
+          addMarker({coordinates:event.latLng}); //Add marker
+          document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
+          // document.getElementById("marker_coords").innerHTML=12;
+          // const coordinates = event.latLng;
+        });
+
+      // Listens for the submission of the pointForm button which then creates a markerElement containing coordinates (lat, lng), pointTitle, pointDescription
+      document.getElementById("pointForm").addEventListener('submit',(event) => {
+        event.preventDefault();
+        //console.log("event", event);
+        //console.log("pointTitle", document.getElementById("pointTitle").value);
+        markers.push(
+          {
+            coordinates: {
+              lat:document.getElementById("marker_coords").innerHTML.split(',')[0],
+              lng:document.getElementById("marker_coords").innerHTML.split(',')[1]
+            },
+            pointTitle: document.getElementById("pointTitle").value,
+            pointDescription: document.getElementById("pointDescription").value,
+            category: document.getElementById("category").value
+          }
+        );
+        // console.log(markers);
+        generatePointsList(markers);
+      });
+
+      document.getElementById("mapsForm").addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        // $.post('/api/maps/create',
+        // {
+        //   markers,
+        //   mapTitle: document.getElementById("mapTitle").value,
+        //   mapDescription: document.getElementById("mapDescription").value
+        // });
+
+        $.ajax({
+          url: '/api/maps/create',
+          method: "POST",
+          data: {
+            markers,
+            mapTitle: document.getElementById("mapTitle").value,
+            mapDescription: document.getElementById("mapDescription").value
+            }
+        })
+        .then((result)=>{
+          //does nothing
+        })
+        .catch((error)=>{
+          console.log('error:',error);
+        });
+      });
+
+      //Loop through markers
+      // for(var i = 0;i < markers.length;i++) {
+      //     addMarker(markers[i]); //Add markers
+      // }
+      console.log('outside markers', markers);
+
+
+      //Add Marker function
+      function addMarker(props) {
+              const marker = new google.maps.Marker({
+              position:props.coordinates,
+              map:map,
+              //icon:props.iconImage
+          });
+
+          // testing for coordinates retrieval
+          // coordinates:{lat:29.9841,lng:-90.1529},
+          //markers.push({ coordinates: {lat:props.coordinates.lat(), lng:props.coordinates.lng()}});
+          //console.log(markers);
+          //console.log(props.coordinates);
+
+          if(props.iconImage) {  //Check for custom icon
+            marker.setIcon(props.iconImage); //Set icon image
+          }
+
+          if(props.content) { //Check content
+            let infoWindow = new google.maps.InfoWindow({
+              content:props.content
+            });
+
+            marker.addListener('click', function() {
+              infoWindow.open(map,marker);
+            });
+          }
+      }
+  }
+</script>
+
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMNp3SzabTd8aZW6jzofga5kNv8K6sy9U&callback=initMap">
+  </script>
+
+</body>
+</html>
