@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viewing Map</title>
+  <style>
+    #map {
+        height: 400px;
+        width: 55%;
+    }
+  </style>
+<!-- Requiring jQuery from host server -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="scripts/create_map.js"></script> -->
+</head>
+
+<body>
+  <h1><%= queryObj[0].map_title %></h1>
+  <h3>Description: <%= queryObj[0].map_desc %></h3>
+  <h3>Owner: <%= queryObj[0].owner %></h3>
+
+<!-- Map -->
+  <div id="map">
+  </div>
+
+  <!-- This is where the individual marker coords are displayed and fetched for the generation of each markers array element -->
+  <div id="marker_coords">
+  </div>
+
+  <!-- This is where all saved points are displayed -->
+  <table id="pointsList">
+  </table>
+
+  <!-- Maps Delete -->
+  <form id='delete-map' method='POST' ACTION='/api/maps/<%= queryObj[0].map_id %>/delete'>
+    <button type='submit'>DELETE MAP</button>
+  </form>
+
+  <!-- Maps Edit (Leads to adding or deleting pins on the selected map) -->
+  <form id='edit-map' method='POST' ACTION='/api/maps/<%= queryObj[0].map_id %>/edit'>
+    <button type='submit'>EDIT MAP</button>
+  </form>
+
+  <!-- SCRIPTS -->
+<script>
+
+  const queryData = <%- JSON.stringify(queryObj) %> //passes query object (templateVars) to <script> and allows us to use it in our JS. I DO NOT KNOW WHY THIS IS ERRORED, code works fine with nothing consoling with issues
+
+  //Array of markers
+  const markers = [];
+
+  // code to take queryData from server and for loop to display markers
+  for (let points of queryData) {
+    console.log(points)
+    markers.push({coordinates: {lat: Number(points.latitude), lng: Number(points.longitude)}, pointTitle: points.title.toString(), pointDescription: points.description.toString(), category: points.category.toString(), content: points.title});
+  }
+
+
+  // this generates the individual point elements within div tags (displayed in #pointsList)
+  const generatePointsList = function(markers){
+    console.log("generatePointsList",markers);
+
+    let t = `<tr>
+                <th >Title</th>
+                <th>Description</th>
+                <th>Lat,Long</th>
+                <th>Category</th>
+                <th>Delete</th>
+            </tr>`;
+    for (let i = 0; i < markers.length; i++){
+      let tr = "<tr>";
+      tr += "<td>"+markers[i].pointTitle+"</td>";
+      tr += "<td>"+markers[i].pointDescription+"</td>";
+      tr += "<td>"+markers[i].coordinates.lat+", "+markers[i].coordinates.lng+"</td>";
+      tr += "<td>"+markers[i].category+"</td>"
+      tr += "<td>"+"delete icon here"+"</td>";
+      tr += "</tr>";
+      t += tr;
+    }
+      document.getElementById("pointsList").innerHTML = t;
+    };
+
+
+    // Initializes the Google map based on currently hard-coded lat, long values
+    function initMap() {
+      //set up initial map for New Orleans as default
+      const options = {  // Creates map options to add to the default map.
+          zoom:8,
+          center:{lat:51.0447,lng:-114.0719}
+      }
+      //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
+      let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
+
+      //render map of user input location (for now, Vancouver or Calgary only)
+      // document.getElementById("cityForm").addEventListener('submit', () => {
+      //   event.preventDefault();
+      //   let cityName = document.getElementById("cityName").value;
+      //   //console.log("cityName",cityName);
+      //   if (cityName === "Vancouver") {
+      //     map.setCenter({
+      //       lat: 49.2827,
+      //       lng: -123.1207
+      //     });
+      //   }
+      //   if (cityName === "Calgary") {
+      //     map.setCenter({
+      //       lat: 51.0447,
+      //       lng: -114.0719
+      //     });
+      //   }
+      // });
+
+      //Listen for click on map
+      // google.maps.event.addListener(map, 'click', function(event){
+      //     addMarker({coordinates:event.latLng}); //Add marker
+      //     document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
+      //     // document.getElementById("marker_coords").innerHTML=12;
+      //     // const coordinates = event.latLng;
+      //   });
+
+      // Listens for the submission of the pointForm button which then creates a markerElement containing coordinates (lat, lng), pointTitle, pointDescription
+      // document.getElementById("pointForm").addEventListener('submit',(event) => {
+      //   event.preventDefault();
+      //   //console.log("event", event);
+      //   //console.log("pointTitle", document.getElementById("pointTitle").value);
+      //   markers.push(
+      //     {
+      //       coordinates: {
+      //         lat:document.getElementById("marker_coords").innerHTML.split(',')[0],
+      //         lng:document.getElementById("marker_coords").innerHTML.split(',')[1]
+      //       },
+      //       pointTitle: document.getElementById("pointTitle").value,
+      //       pointDescription: document.getElementById("pointDescription").value,
+      //       category: document.getElementById("category").value
+      //     }
+      //   );
+      //   // console.log(markers);
+      //   generatePointsList(markers);
+      // });
+
+      // document.getElementById("mapsForm").addEventListener('submit', (event) => {
+      //   event.preventDefault();
+
+      //   // $.post('/api/maps/create',
+      //   // {
+      //   //   markers,
+      //   //   mapTitle: document.getElementById("mapTitle").value,
+      //   //   mapDescription: document.getElementById("mapDescription").value
+      //   // });
+
+      //   $.ajax({
+      //     url: '/api/maps/create',
+      //     method: "POST",
+      //     data: {
+      //       markers,
+      //       mapTitle: document.getElementById("mapTitle").value,
+      //       mapDescription: document.getElementById("mapDescription").value
+      //       }
+      //   })
+      //   .then((result)=>{
+      //     //does nothing
+      //   })
+      //   .catch((error)=>{
+      //     console.log('error:',error);
+      //   });
+      // });
+
+      // Loop through markers
+      for(var i = 0;i < markers.length;i++) {
+          addMarker(markers[i]);
+      }
+
+      generatePointsList(markers);
+      console.log('outside markers', markers);
+
+
+      //Add Marker function
+      function addMarker(props) {
+              const marker = new google.maps.Marker({
+              position:props.coordinates,
+              map:map,
+              //icon:props.iconImage
+          });
+
+          // testing for coordinates retrieval
+          // coordinates:{lat:29.9841,lng:-90.1529},
+          //markers.push({ coordinates: {lat:props.coordinates.lat(), lng:props.coordinates.lng()}});
+          //console.log(markers);
+          //console.log(props.coordinates);
+
+          if(props.iconImage) {  //Check for custom icon
+            marker.setIcon(props.iconImage); //Set icon image
+          }
+
+          if(props.content) { //Check content
+            let infoWindow = new google.maps.InfoWindow({
+              content:props.content
+            });
+
+            marker.addListener('click', function() {
+              infoWindow.open(map,marker);
+            });
+          }
+      }
+  }
+</script>
+
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMNp3SzabTd8aZW6jzofga5kNv8K6sy9U&callback=initMap">
+  </script>
+
+</body>
+</html>

@@ -7,7 +7,7 @@
 
 const express = require('express');
 const router  = express.Router();
-
+// user controller . get
 module.exports = (db) => {
   router.get("/", (req, res) => {
     db.query(`SELECT * FROM users;`)

@@ -1,13 +1,13 @@
 -- Favourites table seeds here (Example)
 
 INSERT INTO favourites (user_id, map_id)
-VALUES (1, 1);
+VALUES (1, 'xbY123');
 
 INSERT INTO favourites (user_id, map_id)
-VALUES (2, 2);
+VALUES (2, 'xbY124');
 
 INSERT INTO favourites (user_id, map_id)
-VALUES (3, 3);
+VALUES (3, 'xbY125');
 
 INSERT INTO favourites (user_id, map_id)
-VALUES (4, 4);
+VALUES (4, 'xbY126');
