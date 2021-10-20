@@ -101,6 +101,26 @@
       //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
       let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
 
+      const iconSelector = (category) => {
+        const iconOptions = {
+          Food: "https://img.icons8.com/office/40/000000/hamburger.png",
+          Shopping: "https://img.icons8.com/office/40/000000/mastercard-credit-card.png",
+          Nature: "https://img.icons8.com/office/40/000000/forest.png",
+          Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
+        };
+        const iconOptionKeys = Object.keys(iconOptions);
+
+        for (const key of iconOptionKeys) {
+          console.log("key:", key);
+          console.log("category:", category);
+
+          if (category === key) {
+            console.log("they match!");
+            return iconOptions[key];
+          }
+        }
+      };
+
       //render map of user input location (for now, Vancouver or Calgary only)
       // document.getElementById("cityForm").addEventListener('submit', () => {
       //   event.preventDefault();
@@ -186,10 +206,12 @@
 
       //Add Marker function
       function addMarker(props) {
+        const iconImage = iconSelector(props.category);
+
               const marker = new google.maps.Marker({
               position:props.coordinates,
               map:map,
-              //icon:props.iconImage
+              icon:iconImage
           });
 
           // testing for coordinates retrieval
