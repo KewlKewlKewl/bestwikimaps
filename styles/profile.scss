@@ -1,0 +1,32 @@
+// See: https://sass-lang.com/
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+#rowOf3MapsCreated, #rowOf3MapsContributed, #rowOf3MapsFavourited {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  align-content: center;
+}
+
+.eachMapImg{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 3em;
+  margin-right: 3em;
+}
+
+img {
+  display: block;
+  height: 200px;
+  width: auto;
+}
+
+
+

@@ -40,6 +40,8 @@
     <input type="text" name="pointTitle" id="pointTitle"><br>
     <label for="pointDescription">Point Description</label><br>
     <input type="text" name="pointDescription" id="pointDescription"><br>
+    <label for="point-image"">Point Image</label><br>
+    <input type="text" placeholder="http://" name="point-image" id="point-image"><br>
     <label for="category">Choose a category:</label>
     <select name="category" id="category">
       <option value="Food">Food</option>
@@ -138,14 +140,21 @@
                 <th>Description</th>
                 <th>Lat</th>
                 <th>Long</th>
+                <th>Category</th>
+                <th>Image</th>
                 <th>Delete Point</th>
             </tr>`;
     for (let i = 0; i < markers.length; i++){
+      if (!markers[i].pointImage) {
+        markers[i].pointImage = 'https://i.pinimg.com/474x/b4/7b/96/b47b9623ba93546b9a2c412e1abe9306.jpg'; //if db or user does not have a image -> marker image is given a default
+      }
       let tr = `<tr id = "${markers[i].pointTitle}">`;
       tr += "<td>"+markers[i].pointTitle+"</td>";
       tr += "<td>"+markers[i].pointDescription+"</td>";
       tr += "<td id = 'lat'>"+markers[i].coordinates.lat+"</td>";
       tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
+      tr += "<td>"+markers[i].category+"</td>";
+      tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=150px width=250px src='${markers[i].pointImage}'></a></td>`;
       tr += "<td>"+`<input type='button' value='Delete Point' class='removeItem'>`+"</td>";
       // tr += "<td>"+"<input type='button' value='Delete Row' onclick='deleteRowFunction()'>"+"</td>";
       // tr += "<td>"+"delete icon here"+"</td>";
@@ -288,6 +297,7 @@
               pointTitle: document.getElementById("pointTitle").value,
               pointDescription: document.getElementById("pointDescription").value,
               category: document.getElementById("category").value,
+              pointImage: document.getElementById("point-image").value
             }
           );
         // console.log(markers);
@@ -322,7 +332,6 @@
           position:props.coordinates,
           map:map,
           icon: props.iconImage,
-              // content: props.content
         });
 
         console.log("icon image:", props.iconImage);
