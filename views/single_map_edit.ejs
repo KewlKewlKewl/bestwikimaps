@@ -208,12 +208,33 @@
 
       //Listen for click on map
       google.maps.event.addListener(map, 'click', function(event){
-          addMarker({coordinates:event.latLng}); //Add marker
+          const iconSelector = (category) => {
+            const iconOptions = {
+              Food: "https://img.icons8.com/office/40/000000/hamburger.png",
+              Shopping: "https://img.icons8.com/office/40/000000/mastercard-credit-card.png",
+              Nature: "https://img.icons8.com/office/40/000000/forest.png",
+              Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
+            };
+            const iconOptionKeys = Object.keys(iconOptions);
+
+            for (const key of iconOptionKeys) {
+              console.log("key:", key);
+              console.log("category:", category);
+
+              if (category === key) {
+                console.log("they match!");
+                return iconOptions[key];
+              }
+            }
+        };
+
+        addMarker({coordinates:event.latLng, iconImage: iconSelector(document.getElementById("category").value)}); //Add marker //Add marker
+
           // setMapOnAll(map);
           document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
           console.log(visualMarkers[0].position.lat());
           console.log(visualMarkers[0].position.lng());
-        });
+      });
 
 
       // Listens for the submission of the pointForm button which then creates a markerElement containing coordinates (lat, lng), pointTitle, pointDescription
@@ -272,7 +293,7 @@
               const marker = new google.maps.Marker({
               position:props.coordinates,
               map:map,
-              //icon:props.iconImage
+              icon: props.iconImage
           });
 
           // sends newly created marker into visualMarkers array with the coordinates
