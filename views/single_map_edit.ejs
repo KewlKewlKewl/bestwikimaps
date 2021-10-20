@@ -201,6 +201,26 @@
       //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
       map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
 
+      const iconSelector = (category) => {
+        const iconOptions = {
+          Food: "https://img.icons8.com/office/40/000000/hamburger.png",
+          Shopping: "https://img.icons8.com/office/40/000000/mastercard-credit-card.png",
+          Nature: "https://img.icons8.com/office/40/000000/forest.png",
+          Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
+        };
+        const iconOptionKeys = Object.keys(iconOptions);
+
+        for (const key of iconOptionKeys) {
+          console.log("key:", key);
+          console.log("category:", category);
+
+          if (category === key) {
+            console.log("they match!");
+            return iconOptions[key];
+          }
+        }
+      };
+
       for (let points of queryData) {
         // console.log(points)
         markers.push({coordinates: {lat: Number(points.latitude), lng: Number(points.longitude)}, pointTitle: points.title.toString(), pointDescription: points.description.toString(), category: points.category.toString(), content: points.title, pointImage: points.point_image});
@@ -208,7 +228,7 @@
 
       //Listen for click on map
       google.maps.event.addListener(map, 'click', function(event){
-          addMarker({coordinates:event.latLng}); //Add marker
+          addMarker({coordinates:event.latLng, iconImage: iconSelector(document.getElementById("category").value)}); //Add marker
           // setMapOnAll(map);
           document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
           console.log(visualMarkers[0].position.lat());
@@ -269,19 +289,31 @@
 
       //Add Marker function
       function addMarker(props) {
-              const marker = new google.maps.Marker({
+        let marker;
+        if (!props.iconImage) {
+          const iconImage = iconSelector(props.category);
+
+          marker = new google.maps.Marker({
               position:props.coordinates,
               map:map,
-              //icon:props.iconImage
+              icon:iconImage
           });
+
+        } else {
+          marker = new google.maps.Marker({
+          position:props.coordinates,
+          map:map,
+          icon:props.iconImage
+          });
+        }
 
           // sends newly created marker into visualMarkers array with the coordinates
           visualMarkers.push(marker);
           console.log("just updated visualMarkers:", visualMarkers)
 
-          if(props.iconImage) {  //Check for custom icon
-            marker.setIcon(props.iconImage); //Set icon image
-          }
+          // if(props.iconImage) {  //Check for custom icon
+          //   marker.setIcon(props.iconImage); //Set icon image
+          // }
 
           if(props.content) { //Check content
             let infoWindow = new google.maps.InfoWindow({

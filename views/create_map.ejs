@@ -102,21 +102,6 @@
   ];
 
   // a function that returns the URL associated with the marker category chosen in the "category" ID element
-  const iconSelector = (category) => {
-    const iconOptions = {
-      Food: "https://img.icons8.com/office/40/000000/hamburger.png",
-      Shopping: "https://img.icons8.com/office/40/000000/shopping-bag--v1.png",
-      Nature: "https://img.icons8.com/office/40/000000/forest.png",
-      Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
-    };
-    const iconOptionKeys = Object.keys(iconOptions);
-
-    for (const key of iconOptionKeys) {
-      if (category === key) {
-        return iconOptions.key;
-      }
-    }
-  };
 
   // sets all of the points back on the map
   function setMapOnAll(map) {
@@ -232,6 +217,26 @@
       //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
       map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options
 
+      const iconSelector = (category) => {
+        const iconOptions = {
+          Food: "https://img.icons8.com/office/40/000000/hamburger.png",
+          Shopping: "https://img.icons8.com/office/40/000000/mastercard-credit-card.png",
+          Nature: "https://img.icons8.com/office/40/000000/forest.png",
+          Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
+        };
+        const iconOptionKeys = Object.keys(iconOptions);
+
+        for (const key of iconOptionKeys) {
+          console.log("key:", key);
+          console.log("category:", category);
+
+          if (category === key) {
+            console.log("they match!");
+            return iconOptions[key];
+          }
+        }
+      };
+
       //render map of user input location (for now, Vancouver or Calgary only)
       document.getElementById("cityForm").addEventListener('submit', () => {
         event.preventDefault();
@@ -255,25 +260,6 @@
       google.maps.event.addListener(map, 'click', function(event){
 
         // a function that returns the URL associated with the marker category chosen in the "category" ID element
-        const iconSelector = (category) => {
-          const iconOptions = {
-            Food: "https://img.icons8.com/office/40/000000/hamburger.png",
-            Shopping: "https://img.icons8.com/office/40/000000/mastercard-credit-card.png",
-            Nature: "https://img.icons8.com/office/40/000000/forest.png",
-            Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
-          };
-          const iconOptionKeys = Object.keys(iconOptions);
-
-          for (const key of iconOptionKeys) {
-            console.log("key:", key);
-            console.log("category:", category);
-
-            if (category === key) {
-              console.log("they match!");
-              return iconOptions[key];
-            }
-          }
-        };
 
         addMarker({coordinates:event.latLng, iconImage: iconSelector(document.getElementById("category").value)}); //Add marker
 
