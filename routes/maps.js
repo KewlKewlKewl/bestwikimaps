@@ -17,8 +17,8 @@ module.exports = (db) => {
   // generatesPoints
   const generatePoints = (markers, mapID) => {
     for (const marker of markers) {
-      const queryStringPoints = `INSERT INTO points (title, description, latitude, longitude, map_id, user_id, category) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
-      const valuesPoints = [marker.pointTitle, marker.pointDescription, marker.coordinates.lat, marker.coordinates.lng, mapID, '1', marker.category];
+      const queryStringPoints = `INSERT INTO points (title, description, latitude, longitude, map_id, user_id, category, point_image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
+      const valuesPoints = [marker.pointTitle, marker.pointDescription, marker.coordinates.lat, marker.coordinates.lng, mapID, '1', marker.category, marker.pointImage];
       db.query(queryStringPoints, valuesPoints);
     }
   };
