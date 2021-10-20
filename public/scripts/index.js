@@ -1,10 +1,19 @@
 // Client facing scripts here
 $(document).ready(function(){
 
-
+  const renderOneMap = function(result) {
+    //updates '#lastFavouritedMap' div with preview_img of last fav img
+    $mapImg = $(`
+    <div id="oneImg">
+      <a href="/api/maps/${result.map_id}"><img src="${result.preview_image}" alt="a popular map"></a>
+      <p>${result.title}</p>
+    </div>
+    `);
+    $('#descWithMap').append($mapImg);
+    return;
+  }
 
   const renderLastFavourited = function(result) {
-    //input: imgURL as a string
     //updates '#lastFavouritedMap' div with preview_img of last fav img
     $lastFavouritedMapImg = $(`
     <h1>Last Favourited Map</h1>
@@ -15,7 +24,7 @@ $(document).ready(function(){
     return;
   }
 
-  const renderRowOf3Maps = function(resultsMaps) {
+  const renderRowOf3Maps = function(resultsMaps, faveBool) {
     for (let map of resultsMaps) {
       $eachMapImg = $(`
       <div class="eachMapImg">
@@ -27,6 +36,9 @@ $(document).ready(function(){
       </div>
       `);
       $('#rowOf3Maps').append($eachMapImg);
+      if (!faveBool) {
+        $( ".favouriteIcon" ).remove();
+      }
     }
     return;
   }
@@ -47,8 +59,24 @@ $(document).ready(function(){
 
   const loadImgs = function() {
     console.log("loadImgs inside???");
+    let url;
+    let functionToUse;
+    let faveBool;
+    const loggedInSection = document.getElementsByTagName("SECTION")[0].id;
+    console.log(loggedInSection);
+    if (loggedInSection === "lastFavouritedMap") {
+      url = '/api/maps/favourite';
+      functionToUse = renderLastFavourited;
+      faveBool = true;
+    }
+    if (loggedInSection === "descWithMap") {
+      //will need to cut down to just 1 map
+      url = '/api/maps/oneMap'
+      functionToUse = renderOneMap;
+      faveBool = false;
+    }
     $.ajax({
-      url: '/api/maps/favourite',
+      url,
       method: "GET"
     })
     .then((result)=>{
@@ -56,13 +84,13 @@ $(document).ready(function(){
       //result[0] = 1 object with the last favourited map
       //result[1] = 3 objects where each is a map
       console.log("result in ajax then:", result);
-      renderLastFavourited(result[0]);
+      functionToUse(result[0]);
     })
     .then(()=> {
     //.then (//add another get request here for the 3 maps??)
       console.log("line58");
       $.get("/api/maps/rowOf3", (resultsArray) => {
-        renderRowOf3Maps(resultsArray);
+        renderRowOf3Maps(resultsArray, faveBool);
       });
     })
     .catch((error)=>{
@@ -71,4 +99,5 @@ $(document).ready(function(){
   }
 
   loadImgs();
+
 });

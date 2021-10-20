@@ -17,16 +17,11 @@ app.use(cookieSession({
 
 module.exports = (db) => {
 
-  // router.get('/', (req, res) => {
-  //   res.render("create_map");
-  // });
-
-  router.get('/', (req, res) => {
-    const templateVars = {
-      user: req.session.user_id
-    };
-    res.render("index", templateVars); //this is working?
-  });
+  router.post('/', (req, res) => {
+    //hard-code to set cookie params user_id =1
+    req.session.user_id = 1;
+    res.redirect('/index');
+    });
 
     return router;
 
