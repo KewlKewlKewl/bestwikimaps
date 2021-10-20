@@ -65,12 +65,6 @@ $(document).ready(function(){
         renderRowOf3Maps(resultsArray);
       });
     })
-    .then((result)=>{
-      //where 'result' is an array:
-      //result[0] = 1 object with the last favourited map
-      //result[1] = 3 objects where each is a map
-      // renderRowOf3Maps(resultsMaps);
-    })
     .catch((error)=>{
       console.log('error:',error);
     });

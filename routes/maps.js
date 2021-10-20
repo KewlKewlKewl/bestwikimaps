@@ -69,6 +69,63 @@ module.exports = (db) => {
       });
     });
 
+  router.get('/rowOf3MapsCreated', (req, res) => {
+    //console.log('inside row3?')
+    const query = `
+    SELECT *
+    FROM maps
+    WHERE user_id = $1
+    LIMIT 3;
+    `;
+    db.query(query, ['1'])
+      .then((results) => {
+        res.json(results.rows);
+      })
+      .catch(err => {
+        console.error('points_err:', err.message);
+        res
+          .status(500)
+      });
+    });
+
+  router.get('/rowOf3MapsContributed', (req, res) => {
+    const query = `
+    SELECT *, maps.title
+    FROM maps
+    JOIN points ON map_id = maps.id
+    WHERE points.user_id = $1
+    LIMIT 3;
+    `;
+    db.query(query, ['1'])
+      .then((results) => {
+        res.json(results.rows);
+      })
+      .catch(err => {
+        console.error('points_err:', err.message);
+        res
+          .status(500)
+      });
+    });
+
+  router.get('/rowOf3MapsFavourited', (req, res) => {
+    const query = `
+    SELECT *
+    FROM maps
+    JOIN favourites ON map_id = maps.id
+    WHERE favourites.user_id = $1
+    LIMIT 3;
+    `;
+    db.query(query, ['1'])
+      .then((results) => {
+        res.json(results.rows);
+      })
+      .catch(err => {
+        console.error('points_err:', err.message);
+        res
+          .status(500)
+      });
+    });
+
   router.get('/:mapid', (req,res) => {
     const mapID = req.params.mapid //need to have a request coming with the mapid of the selected map
     console.log(mapID);
@@ -177,7 +234,7 @@ module.exports = (db) => {
 
   router.post('/favourite', (req, res) => {
     const mapID = req.body.map_id;
-    console.log(req.body);
+    console.log(mapID);
     const query = `INSERT INTO favourites (user_id, map_id) VALUES ($1, $2) RETURNING *`;
     const values = [`1`, `${mapID}`];
 
