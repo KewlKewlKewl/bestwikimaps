@@ -57,6 +57,7 @@ Stretch:
 User stories:
 "As a ___, I want to _, because ____."
 "As a __, I shouldn't be able to _, because ___."
+"as a user, when I go to ___ page and click ___, I should see __"
 1. As a logged-in user, I want to see a list of maps of my own.
 2. As a non-logged-in user, I can view a map that I select with multiple points (and have permission to view).
 3. As a non-logged-in user, I can view maps that have many points (from the same set).

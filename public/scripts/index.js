@@ -1,6 +1,8 @@
 // Client facing scripts here
 $(document).ready(function(){
 
+
+
   const renderLastFavourited = function(result) {
     //input: imgURL as a string
     //updates '#lastFavouritedMap' div with preview_img of last fav img
@@ -18,7 +20,10 @@ $(document).ready(function(){
       $eachMapImg = $(`
       <div class="eachMapImg">
       <a href="/api/maps/${map.id}"><img src="${map.preview_image}" alt="a popular map"></a>
-      <p>${map.title}</p>
+        <div class="test">
+          <p>${map.title}</p>
+          <span class="favouriteIcon" data-id="${map.id}"><i class="fas fa-heart"></i></span>
+        </div>
       </div>
       `);
       $('#rowOf3Maps').append($eachMapImg);
@@ -26,23 +31,19 @@ $(document).ready(function(){
     return;
   }
 
-  // $('.favouriteThisImg').on("click", function(event){
-  //   event.preventDefault();
-  //   let textEntered = $(this).serialize().slice(5);
-
-  //   $.ajax({
-  //     url: '/tweets/',
-  //     method: "POST",
-  //     data: $(this).serialize()
-  //   })
-  //   .then((result)=>{
-
-  //   })
-  //   .catch((error)=>{
-  //     console.log('error:',error);
-  //   });
-
-  // });
+  $("body").on('click',".favouriteIcon",function(event){
+    event.preventDefault();
+    console.log('clicked');
+    //console.log(this.getAttribute("data-id"));
+    const map_id = this.getAttribute("data-id");
+    //console.log("event:", event);
+    const data = {
+      map_id
+    }
+    $.post('/api/maps/favourite',data, (results) =>{
+      console.log("it worked:", results);
+    });
+  })
 
   const loadImgs = function() {
     console.log("loadImgs inside???");
@@ -56,7 +57,6 @@ $(document).ready(function(){
       //result[1] = 3 objects where each is a map
       console.log("result in ajax then:", result);
       renderLastFavourited(result[0]);
-      //return result;
     })
     .then(()=> {
     //.then (//add another get request here for the 3 maps??)

@@ -4,28 +4,22 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Viewing Map</title>
   <style>
     #map {
         height: 400px;
-        width: 75%;
+        width: 55%;
     }
   </style>
 <!-- Requiring jQuery from host server -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <!-- <script type="text/javascript" src="scripts/create_map.js"></script> -->
-
 </head>
+
 <body>
-  <h1>Your New Map!</h1>
-<!-- City Form -->
-<form id="cityForm">
-  <label for="cityName">City Name</label><br>
-  <input type="text" name="cityName" id="cityName"><br>
-  <label for="countryName">Country Name</label><br>
-  <input type="text" name="countryName" id="countryName"><br>
-  <button type='submit' class='cityCountryButton'>Show map!</button>
-</form>
+  <h1><%= queryObj[0].map_title %></h1>
+  <h3>Description: <%= queryObj[0].map_desc %></h3>
+  <h3>Owner: <%= queryObj[0].owner %></h3>
 
 <!-- Map -->
   <div id="map">
@@ -55,72 +49,138 @@
   <table id="pointsList">
   </table>
 
-<!-- Maps Form -->
-<form id="mapsForm">
-  <label for="mapTitle">Map Title</label><br>
-  <input type="text" name="mapTitle" id="mapTitle"><br>
-  <label for="mapDescription">Map Description</label><br>
-  <input type="text" name="mapDescription" id="mapDescription"><br>
-  <button type='submit' class='pointButton'>Save Map</button>
-</form>
+  <!-- Maps Edit (Leads to adding or deleting pins on the selected map) -->
+  <form id='save-map'>
+    <button type='submit'>SAVE MAP</button>
+  </form>
+
   <!-- SCRIPTS -->
 <script>
 
-  //Array of markers
-  const markers = [
-      {
-          coordinates:{lat:29.9841,lng:-90.1529},
-          iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-          pointTitle:'test',
-          pointDescription:'test',
-          category:'Food'
-      },
-      {
-          coordinates:{lat:29.9146,lng:-90.0540},
-          pointTitle:'test',
-          pointDescription:'test',
-          category:'Shopping'
-      },
-      {
-          coordinates:{lat:30.4583,lng:-91.1403},
-          pointTitle:'test',
-          pointDescription:'test',
-          category:'Nightlife'
-      }
-  ];
+  let map;
 
+  const visualMarkers = [];
+
+  const queryData = <%- JSON.stringify(queryObj) %> //passes query object (templateVars) to <script> and allows us to use it in our JS. I DO NOT KNOW WHY THIS IS ERRORED, code works fine with nothing consoling with issues
+  // console.log('qdata:',queryData)
+  //Array of markers
+  const markers = [];
+
+  // code to take queryData from server and for loop to display markers
+
+
+  // FAEZ CODE DELETE POINTS
+
+  // sets all of the points back on the map
+  function setMapOnAll(map) {
+    for (let i = 0; i < visualMarkers.length; i++) {
+      visualMarkers[i].setMap(map);
+    }
+  }
+
+  function removeMarkers() {
+    for(let i = 0; i < visualMarkers.length; i++){
+      visualMarkers[i].setMap(null);
+    }
+  }
 
 
   // this generates the individual point elements within div tags (displayed in #pointsList)
   const generatePointsList = function(markers){
     console.log("generatePointsList",markers);
-
-    /////// OLD code
-    // let htmlString = "<h1>Points List</h1><br>";
-    // for (let i = 0; i < markers.length; i++) {
-    //   htmlString += '<div> ';
-    //   htmlString += markers[i].pointTitle;
-    //   htmlString += '</div>';
-    // }
-    // document.getElementById("pointsList").innerHTML = htmlString;
-
     let t = `<tr>
                 <th >Title</th>
                 <th>Description</th>
-                <th>Lat,Long</th>
-                <th>(delete)</th>
+                <th>Lat</th>
+                <th>Long</th>
+                <th>Category<th>
+                <th>Delete Point</th>
             </tr>`;
     for (let i = 0; i < markers.length; i++){
-      let tr = "<tr>";
+      let tr = `<tr id = "${markers[i].pointTitle}">`;
       tr += "<td>"+markers[i].pointTitle+"</td>";
       tr += "<td>"+markers[i].pointDescription+"</td>";
-      tr += "<td>"+markers[i].coordinates.lat+", "+markers[i].coordinates.lng+"</td>";
-      tr += "<td>"+"delete icon here"+"</td>";
+      tr += "<td id = 'lat'>"+markers[i].coordinates.lat+"</td>";
+      tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
+      tr += "<td id = 'long'>"+markers[i].category+"</td>";
+      tr += "<td>"+`<input type='button' value='Delete Point' class='removeItem'>`+"</td>";
+      // tr += "<td>"+"<input type='button' value='Delete Row' onclick='deleteRowFunction()'>"+"</td>";
+      // tr += "<td>"+"delete icon here"+"</td>";
       tr += "</tr>";
       t += tr;
     }
       document.getElementById("pointsList").innerHTML = t;
     };
+
+  // simple reference to the pointsTable
+    const pointsTable = document.getElementById('pointsList');
+
+    // event listener for clicks onto any "delete point" button - removes the HTML element and marker from markers array (so it's not submitted to the DB when we save the map)
+    pointsTable.addEventListener('click', (event) => {
+
+      // if you click anywhere in the table aside from the removeItem button - it does nothing
+      if (!event.target.classList.contains('removeItem')) {
+        return;
+      }
+
+      // if you did click on the removeItem button - this determines the point title of the row we just deleted to also remove it from the markers table
+      const deletedPointTitle = event.target.parentNode.parentNode.id;
+      console.log("deletedPointTitle:", deletedPointTitle);
+
+      // this counter keeps track of the marker index that we removed from the markers array
+      let removedMarkerIndex = 0;
+
+      // find the index of the marker from the markers array using the pointTitle - this index is then used to remove the marker from the markers list and to remove the visual marker - WARNING, each point title must be unique using this logic
+      for (let i = 0; i < markers.length; i++) {
+        if (markers[i].pointTitle === deletedPointTitle) {
+          removedMarkerIndex = i;
+          console.log('removed marker index:', removedMarkerIndex);
+          // console.log(removedMarkerIndex);
+        }
+      }
+
+
+      // saves the respect lat and lng for the removed marker from the markers array
+      let markerLat = markers[removedMarkerIndex].coordinates.lat;
+      let markerLng = markers[removedMarkerIndex].coordinates.lng;
+
+      // console.log("markerLat:", parseFloat(markerLat).toFixed(4));
+      // console.log("visualMarker Lat:", visualMarkers[0].position.lat().toFixed(4));
+      // console.log("markerLng:", parseFloat(markerLng).toFixed(4));
+      // console.log("visualMarker Lng:", visualMarkers[0].position.lng().toFixed(4));
+      // console.log("visualMarkers array PRE-deletion:", visualMarkers);
+      console.log('PRE VISUAL MARKERS')
+      for (let elm of visualMarkers) {
+        console.log(elm.position.lat(), elm.position.lng())
+      }
+
+
+      for (let j = 0; j < visualMarkers.length; j++) {
+        // the marketLat and markerLng are not fixed length or integer types so the only way to have these equal the coords for the visualMarker is to convert to float then to fixed decimal places
+        if (parseFloat(markerLat).toFixed(4) === visualMarkers[j].position.lat().toFixed(4) && parseFloat(markerLng).toFixed(4) === visualMarkers[j].position.lng().toFixed(4)) {
+          removeMarkers();
+          visualMarkers.splice(j, 1);
+          console.log('POST VISUAL MARKERS')
+          for (let elm of visualMarkers) {
+            console.log(elm.position.lat(), elm.position.lng())
+          }
+          setMapOnAll(map);
+        }
+      }
+
+      // this removes the marker (aka point) we deleted from the markers array
+      markers.splice(removedMarkerIndex, 1);
+
+      // I think* this is for the button's functionality but I haven't noticed it actually do anything yet
+      event.preventDefault();
+
+      // This re-sets the map with points
+
+      // this deletes the actual HTML element from the DOM
+      event.target.parentNode.parentNode.remove();
+
+    });
+
 
     // Initializes the Google map based on currently hard-coded lat, long values
     function initMap() {
@@ -130,34 +190,22 @@
           center:{lat:51.0447,lng:-114.0719}
       }
       //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
-      let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
+      map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
 
-      //render map of user input location (for now, Vancouver or Calgary only)
-      document.getElementById("cityForm").addEventListener('submit', () => {
-        event.preventDefault();
-        let cityName = document.getElementById("cityName").value;
-        //console.log("cityName",cityName);
-        if (cityName === "Vancouver") {
-          map.setCenter({
-            lat: 49.2827,
-            lng: -123.1207
-          });
-        }
-        if (cityName === "Calgary") {
-          map.setCenter({
-            lat: 51.0447,
-            lng: -114.0719
-          });
-        }
-      });
+      for (let points of queryData) {
+        // console.log(points)
+        markers.push({coordinates: {lat: Number(points.latitude), lng: Number(points.longitude)}, pointTitle: points.title.toString(), pointDescription: points.description.toString(), category: points.category.toString(), content: points.title});
+      }
 
       //Listen for click on map
       google.maps.event.addListener(map, 'click', function(event){
           addMarker({coordinates:event.latLng}); //Add marker
+          // setMapOnAll(map);
           document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
-          // document.getElementById("marker_coords").innerHTML=12;
-          // const coordinates = event.latLng;
+          console.log(visualMarkers[0].position.lat());
+          console.log(visualMarkers[0].position.lng());
         });
+
 
       // Listens for the submission of the pointForm button which then creates a markerElement containing coordinates (lat, lng), pointTitle, pointDescription
       document.getElementById("pointForm").addEventListener('submit',(event) => {
@@ -179,23 +227,15 @@
         generatePointsList(markers);
       });
 
-      document.getElementById("mapsForm").addEventListener('submit', (event) => {
+      document.getElementById("save-map").addEventListener('submit', (event) => {
         event.preventDefault();
 
-        // $.post('/api/maps/create',
-        // {
-        //   markers,
-        //   mapTitle: document.getElementById("mapTitle").value,
-        //   mapDescription: document.getElementById("mapDescription").value
-        // });
-
         $.ajax({
-          url: '/api/maps/create',
+          url: '/api/maps/mapid/edit',
           method: "POST",
           data: {
             markers,
-            mapTitle: document.getElementById("mapTitle").value,
-            mapDescription: document.getElementById("mapDescription").value
+            mapId: queryData[0].map_id
             }
         })
         .then((result)=>{
@@ -206,10 +246,14 @@
         });
       });
 
-      //Loop through markers
-      // for(var i = 0;i < markers.length;i++) {
-      //     addMarker(markers[i]); //Add markers
-      // }
+      // Loop through markers
+      for(let i = 0;i < markers.length;i++) {
+          addMarker(markers[i]);
+      }
+
+      console.log('NEW NEW MARKERS:', visualMarkers)
+
+      generatePointsList(markers);
       console.log('outside markers', markers);
 
 
@@ -221,11 +265,9 @@
               //icon:props.iconImage
           });
 
-          // testing for coordinates retrieval
-          // coordinates:{lat:29.9841,lng:-90.1529},
-          //markers.push({ coordinates: {lat:props.coordinates.lat(), lng:props.coordinates.lng()}});
-          //console.log(markers);
-          //console.log(props.coordinates);
+          // sends newly created marker into visualMarkers array with the coordinates
+          visualMarkers.push(marker);
+          console.log("just updated visualMarkers:", visualMarkers)
 
           if(props.iconImage) {  //Check for custom icon
             marker.setIcon(props.iconImage); //Set icon image
