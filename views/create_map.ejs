@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- All Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
   <title>Document</title>
   <style>
     #map {
@@ -14,7 +18,6 @@
 <!-- Requiring jQuery from host server -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <!-- <script type="text/javascript" src="scripts/create_map.js"></script> -->
-
 </head>
 <body>
   <h1>Your New Map!</h1>
@@ -96,6 +99,23 @@
       // }
   ];
 
+  // a function that returns the URL associated with the marker category chosen in the "category" ID element
+  const iconSelector = (category) => {
+    const iconOptions = {
+      Food: "https://img.icons8.com/office/40/000000/hamburger.png",
+      Shopping: "https://img.icons8.com/office/40/000000/shopping-bag--v1.png",
+      Nature: "https://img.icons8.com/office/40/000000/forest.png",
+      Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
+    };
+    const iconOptionKeys = Object.keys(iconOptions);
+
+    for (const key of iconOptionKeys) {
+      if (category === key) {
+        return iconOptions.key;
+      }
+    }
+  };
+
   // sets all of the points back on the map
   function setMapOnAll(map) {
         for (let i = 0; i < visualMarkers.length; i++) {
@@ -148,7 +168,7 @@
 
       // if you did click on the removeItem button - this determines the point title of the row we just deleted to also remove it from the markers table
       const deletedPointTitle = event.target.parentNode.parentNode.id;
-      console.log("deletedPointTitle:", deletedPointTitle);
+      // console.log("deletedPointTitle:", deletedPointTitle);
 
       // this counter keeps track of the marker index that we removed from the markers array
       let removedMarkerIndex = 0;
@@ -222,10 +242,32 @@
         }
       });
 
-      //Listen for click on map
+      //Listens for clicks on the map
       google.maps.event.addListener(map, 'click', function(event){
-          addMarker({coordinates:event.latLng}); //Add marker
-          // setMapOnAll(map);
+
+        // a function that returns the URL associated with the marker category chosen in the "category" ID element
+        const iconSelector = (category) => {
+          const iconOptions = {
+            Food: "https://img.icons8.com/office/40/000000/hamburger.png",
+            Shopping: "https://img.icons8.com/office/40/000000/mastercard-credit-card.png",
+            Nature: "https://img.icons8.com/office/40/000000/forest.png",
+            Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
+          };
+          const iconOptionKeys = Object.keys(iconOptions);
+
+          for (const key of iconOptionKeys) {
+            console.log("key:", key);
+            console.log("category:", category);
+
+            if (category === key) {
+              console.log("they match!");
+              return iconOptions[key];
+            }
+          }
+        };
+
+        addMarker({coordinates:event.latLng, iconImage: iconSelector(document.getElementById("category").value)}); //Add marker
+
           document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
           console.log(visualMarkers[0].position.lat());
           console.log(visualMarkers[0].position.lng());
@@ -246,7 +288,6 @@
               pointTitle: document.getElementById("pointTitle").value,
               pointDescription: document.getElementById("pointDescription").value,
               category: document.getElementById("category").value,
-              // content: document.getElementById("pointTitle").value,
             }
           );
         // console.log(markers);
@@ -276,14 +317,54 @@
       console.log('outside markers', markers);
 
       function addMarker(props) {
-              const marker = new google.maps.Marker({
-              position:props.coordinates,
-              map:map,
+
+        const marker = new google.maps.Marker({
+          position:props.coordinates,
+          map:map,
+          icon: props.iconImage,
               // content: props.content
-          });
-          // sends newly created marker into visualMarkers array with the coordinates
-          visualMarkers.push(marker);
-          console.log("just updated visualMarkers:", visualMarkers)
+        });
+
+        console.log("icon image:", props.iconImage);
+
+        // sends newly created marker into visualMarkers array with the coordinates
+        visualMarkers.push(marker);
+        // console.log("just updated visualMarkers:", visualMarkers)
+
+        // EXPERIMENTAL CODE to disallow more than one marker on the screen at a time
+        // function visualMarkerLimiter() {
+        //   console.log("visual marker length:", visualMarkers.length);
+        //   console.log("markers length:", markers.length);
+        //   if ((visualMarkers.length - markers.length) > 1) {
+        //     for (let j = 0; j < visualMarkers.length; j++) {
+        //       for (let i = 0; i < markers.length; i++) {
+        //         console.log("visualMarker lat:", visualMarkers[j].position.lat().toFixed(4));
+        //         console.log("markers lat:", parseFloat(markers[i].coordinates.lat).toFixed(4));
+        //         console.log("visualMarker lng:", visualMarkers[j].position.lng().toFixed(4));
+        //         console.log("markers lng:", parseFloat(markers[i].coordinates.lng).toFixed(4));
+
+        //         if (visualMarkers[j].position.lat().toFixed(4) === parseFloat(markers[i].coordinates.lat).toFixed(4) && visualMarkers[j].position.lng().toFixed(4) === parseFloat(markers[i].coordinates.lng).toFixed(4)) {
+        //           console.log("the visualMarker and marker matched!");
+        //           visualMarkers[j].setMap(map);
+        //         } else {
+        //           removeMarkers();
+        //           visualMarkers.splice(j, 1);
+        //           setMapOnAll(map);
+        //         }
+        //       }
+        //     }
+        //   }
+        // };
+
+        // visualMarkerLimiter();
+
+        // let markerLat = markers[removedMarkerIndex].coordinates.lat;
+        // let markerLng = markers[removedMarkerIndex].coordinates.lng;
+        // if (parseFloat(markerLat).toFixed(4) === visualMarkers[j].position.lat().toFixed(4) && parseFloat(markerLng).toFixed(4) === visualMarkers[j].position.lng().toFixed(4)) {
+        //   removeMarkers();
+        //   visualMarkers.splice(j, 1);
+        //   setMapOnAll(map);
+        // }
 
           // visualMarkers.push({marker, coordinates: props.coordinates});
 
