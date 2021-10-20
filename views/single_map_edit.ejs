@@ -50,7 +50,7 @@
   </table>
 
   <!-- Maps Edit (Leads to adding or deleting pins on the selected map) -->
-  <form id='save-map' method='POST'>
+  <form id='save-map'>
     <button type='submit'>SAVE MAP</button>
   </form>
 
@@ -227,25 +227,24 @@
         generatePointsList(markers);
       });
 
-      // document.getElementById("mapsForm").addEventListener('submit', (event) => {
-      //   event.preventDefault();
+      document.getElementById("save-map").addEventListener('submit', (event) => {
+        event.preventDefault();
 
-      //   $.ajax({
-      //     url: '/api/maps/create',
-      //     method: "POST",
-      //     data: {
-      //       markers,
-      //       mapTitle: document.getElementById("mapTitle").value,
-      //       mapDescription: document.getElementById("mapDescription").value
-      //       }
-      //   })
-      //   .then((result)=>{
-      //     //does nothing
-      //   })
-      //   .catch((error)=>{
-      //     console.log('error:',error);
-      //   });
-      // });
+        $.ajax({
+          url: '/api/maps/mapid/edit',
+          method: "POST",
+          data: {
+            markers,
+            mapId: queryData[0].map_id
+            }
+        })
+        .then((result)=>{
+          //does nothing
+        })
+        .catch((error)=>{
+          console.log('error:',error);
+        });
+      });
 
       // Loop through markers
       for(let i = 0;i < markers.length;i++) {
