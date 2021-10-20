@@ -18,7 +18,7 @@ module.exports = (db) => {
   });
 
   router.get('/favourite', (req, res) => {
-    console.log("index_routes_hi??");
+    //console.log("index_routes_hi??");
     const queryFaveMaps = `
     SELECT *
     FROM maps
@@ -27,10 +27,10 @@ module.exports = (db) => {
     LIMIT 1;
     `;
 
-    db.query(queryFaveMaps, ['1']) //query last favourited map
+    db.query(queryFaveMaps, ['2']) //query last favourited map
       .then((results) => {
-        console.log("querytrue1");
-        console.log("myfavemap:", results.rows);
+        //console.log("querytrue1");
+        //console.log("myfavemap:", results.rows);
         res.json(results.rows);
       })
       .catch(err => {
@@ -40,24 +40,24 @@ module.exports = (db) => {
       });
     });
 
-    router.get('/rowOf3', (req, res) => {
-      console.log('inside row3?')
-      const query3Imgs = `
-      SELECT *
-      FROM maps
-      LIMIT 3;
-      `;
-      db.query(query3Imgs)
-        .then((results) => {
-          console.log("3 maps:", results.rows);
-          res.json(results.rows);
-        })
-        .catch(err => {
-          console.error('points_err:', err.message);
-          res
-            .status(500)
-        });
+  router.get('/rowOf3', (req, res) => {
+    //console.log('inside row3?')
+    const query3Imgs = `
+    SELECT *
+    FROM maps
+    LIMIT 3;
+    `;
+    db.query(query3Imgs)
+      .then((results) => {
+        //console.log("3 maps:", results.rows);
+        res.json(results.rows);
+      })
+      .catch(err => {
+        console.error('points_err:', err.message);
+        res
+          .status(500)
       });
+    });
 
   router.get('/:mapid', (req,res) => {
     const mapID = req.params.mapid //need to have a request coming with the mapid of the selected map
@@ -125,6 +125,23 @@ module.exports = (db) => {
     .then(() => {
       generatePoints(markers); //query+insert points data second. inside promise.then to ensure that this chains after map creation
     })
+      .catch(err => {
+        console.error('points_err:', err.message);
+        res
+          .status(500)
+      });
+    });
+
+  router.post('/favourite', (req, res) => {
+    const mapID = req.body.map_id;
+    console.log(req.body);
+    const query = `INSERT INTO favourites (user_id, map_id) VALUES ($1, $2) RETURNING *`;
+    const values = [`1`, `${mapID}`];
+
+    db.query(query, values) //query last favourited map
+      .then((results) => {
+        console.log(results);
+      })
       .catch(err => {
         console.error('points_err:', err.message);
         res
