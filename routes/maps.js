@@ -80,7 +80,7 @@ module.exports = (db) => {
 
   router.get('/rowOf3MapsContributed', (req, res) => {
     const query = `
-    SELECT *
+    SELECT *, maps.title
     FROM maps
     JOIN points ON map_id = maps.id
     WHERE points.user_id = $1
@@ -191,7 +191,7 @@ module.exports = (db) => {
 
   router.post('/favourite', (req, res) => {
     const mapID = req.body.map_id;
-    console.log(req.body);
+    console.log(mapID);
     const query = `INSERT INTO favourites (user_id, map_id) VALUES ($1, $2) RETURNING *`;
     const values = [`1`, `${mapID}`];
 
