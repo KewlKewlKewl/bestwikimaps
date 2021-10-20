@@ -39,7 +39,7 @@
   </form>
 
   <!-- Maps Edit (Leads to adding or deleting pins on the selected map) -->
-  <form id='edit-map' method='POST' ACTION='/api/maps/<%= queryObj[0].map_id %>/edit'>
+  <form id='edit-map' method='GET' ACTION='/api/maps/<%= queryObj[0].map_id %>/edit'>
     <button type='submit'>EDIT MAP</button>
   </form>
 
@@ -65,17 +65,17 @@
     let t = `<tr>
                 <th >Title</th>
                 <th>Description</th>
-                <th>Lat,Long</th>
+                <th>Lat</th>
+                <th>Long</th>
                 <th>Category</th>
-                <th>Delete</th>
             </tr>`;
     for (let i = 0; i < markers.length; i++){
       let tr = "<tr>";
       tr += "<td>"+markers[i].pointTitle+"</td>";
       tr += "<td>"+markers[i].pointDescription+"</td>";
-      tr += "<td>"+markers[i].coordinates.lat+", "+markers[i].coordinates.lng+"</td>";
+      tr += "<td id = 'lat'>"+markers[i].coordinates.lat+"</td>";
+      tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
       tr += "<td>"+markers[i].category+"</td>"
-      tr += "<td>"+"delete icon here"+"</td>";
       tr += "</tr>";
       t += tr;
     }
