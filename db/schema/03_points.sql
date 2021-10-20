@@ -10,5 +10,6 @@ CREATE TABLE points (
   longitude FLOAT NOT NULL,
   map_id VARCHAR(32) REFERENCES maps(id) ON DELETE CASCADE,
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-  category VARCHAR(255) NOT NULL
+  category VARCHAR(255) NOT NULL,
+  point_image VARCHAR(255)
 );
