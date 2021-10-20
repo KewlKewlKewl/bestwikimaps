@@ -100,19 +100,21 @@
                 <th>Category</th>
                 <th>Image</th>
                 <th>Delete Point</th>
+                <th>Save Point</th>
             </tr>`;
     for (let i = 0; i < markers.length; i++){
       if (!markers[i].pointImage) {
         markers[i].pointImage = 'https://i.pinimg.com/474x/b4/7b/96/b47b9623ba93546b9a2c412e1abe9306.jpg'; //if db or user does not have a image -> marker image is given a default
       }
       let tr = `<tr id = "${markers[i].pointTitle}">`;
-      tr += "<td>"+markers[i].pointTitle+"</td>";
-      tr += "<td>"+markers[i].pointDescription+"</td>";
+      tr += "<td contenteditable='true' autofocus>"+markers[i].pointTitle+"</td>";
+      tr += "<td  contenteditable='true'>"+markers[i].pointDescription+"</td>";
       tr += "<td id = 'lat'>"+markers[i].coordinates.lat+"</td>";
       tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
-      tr += "<td>"+markers[i].category+"</td>";
+      tr += "<td  contenteditable='true'>"+markers[i].category+"</td>";
       tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=150px width=250px src='${markers[i].pointImage}'></a></td>`;
       tr += "<td>"+`<input type='button' value='Delete Point' class='removeItem'>`+"</td>";
+      tr += "<td>"+`<input type='button' value='Edit Point' class='editItem'>`+"</td>";
       // tr += "<td>"+"<input type='button' value='Delete Row' onclick='deleteRowFunction()'>"+"</td>";
       // tr += "<td>"+"delete icon here"+"</td>";
       tr += "</tr>";
@@ -189,6 +191,67 @@
       event.target.parentNode.parentNode.remove();
 
     });
+
+    console.log('original markers;', markers)
+
+    const iconSelector = (category) => {
+        const iconOptions = {
+          Food: "https://img.icons8.com/office/40/000000/hamburger.png",
+          Shopping: "https://img.icons8.com/office/40/000000/mastercard-credit-card.png",
+          Nature: "https://img.icons8.com/office/40/000000/forest.png",
+          Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
+        };
+        const iconOptionKeys = Object.keys(iconOptions);
+
+        for (const key of iconOptionKeys) {
+          console.log("key:", key);
+          console.log("category:", category);
+
+          if (category === key) {
+            console.log("they match!");
+            return iconOptions[key];
+          }
+        }
+      };
+
+
+    //EDIT POINT LOGIC
+    pointsTable.addEventListener('click', (event) => {
+      // if you click anywhere in the table aside from the removeItem button - it does nothing
+      if (!event.target.classList.contains('editItem')) {
+        return;
+      }
+      const editedPointTitle = event.target.parentNode.parentNode.id;
+      const htmlNodeArray = event.target.parentNode.parentNode.children
+      console.log(editedPointTitle)
+      console.log(htmlNodeArray)
+      for (marker of markers) {
+        if (marker.pointTitle === editedPointTitle) {
+          marker.pointTitle = htmlNodeArray[0].innerHTML;
+          marker.pointDescription = htmlNodeArray[1].innerHTML;
+          marker.category = htmlNodeArray[4].innerHTML;
+          marker.content = htmlNodeArray[0].innerHTML;
+          // iconSelector(htmlNodeArray[4].innerHTML);
+
+          event.target.parentNode.parentNode.id = htmlNodeArray[0].innerHTML;
+
+          for (let i = 0; i < visualMarkers.length; i++) {
+            if (parseFloat(marker.coordinates.lat).toFixed(4) === visualMarkers[i].position.lat().toFixed(4) && parseFloat(marker.coordinates.lng).toFixed(4) === visualMarkers[i].position.lng().toFixed(4)) {
+              console.log("visual marker icon contents pre change:", visualMarkers[i].icon);
+              console.log("icon Selector Output:", iconSelector(marker.category));
+              visualMarkers[i].icon = iconSelector(marker.category);
+              console.log("visual marker icon contents post change:", visualMarkers[i].icon);
+            }
+          }
+        }
+      }
+      removeMarkers();
+      setMapOnAll(map);
+      console.log("NEW TITLE:", event.target.parentNode.parentNode.id)
+      console.log('edited markers:', markers)
+    })
+
+
 
 
     // Initializes the Google map based on currently hard-coded lat, long values
@@ -275,6 +338,7 @@
           console.log('error:',error);
         });
       });
+
 
       // Loop through markers
       for(let i = 0;i < markers.length;i++) {
