@@ -68,6 +68,7 @@ module.exports = (db) => {
     FROM maps
     JOIN favourites ON maps.id = map_id
     WHERE favourites.user_id = $1
+    ORDER BY maps.id DESC
     LIMIT 1;
     `;
 
@@ -107,6 +108,7 @@ module.exports = (db) => {
       const query = `
       SELECT *
       FROM maps
+      ORDER BY id DESC
       LIMIT 1;
       `;
 

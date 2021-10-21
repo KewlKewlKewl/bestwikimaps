@@ -15,7 +15,7 @@ body {
   justify-content: space-between;
 }
 
-.eachMapImg{
+.eachMapImg, #lastFavouritedMap{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,4 +85,13 @@ section {
   color: #009999;
 }
 
+.caption {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%; //or any percentage width you want
+}
 

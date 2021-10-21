@@ -15,13 +15,10 @@ module.exports = (db) => {
   // });
 
   router.get('/', (req, res) => {
-
     const templateVars = {
       user: req.session.user_id
     };
-
     res.render("profile", templateVars); //this is working?
-    // console.log('cookie:', req.session.user_id)
     });
 
     return router;

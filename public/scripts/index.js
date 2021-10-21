@@ -5,7 +5,7 @@ $(document).ready(function(){
     //updates '#lastFavouritedMap' div with preview_img of last fav img
     $mapImg = $(`
     <div id="oneImg">
-      <a href="/api/maps/${result.map_id}"><img src="${result.preview_image}" alt="a popular map"></a>
+      <a href="/api/maps/${result.map_id || result.id}"><img src="${result.preview_image}" alt="a popular map"></a>
       <p>${result.title}</p>
     </div>
     `);
@@ -16,7 +16,7 @@ $(document).ready(function(){
   const renderLastFavourited = function(result) {
     //updates '#lastFavouritedMap' div with preview_img of last fav img
     $lastFavouritedMapImg = $(`
-    <h1>Last Favourited Map</h1>
+    <h1>A Favourite Map</h1>
     <a href="/api/maps/${result.map_id}"><img src="${result.preview_image}" alt="My Last Favourite Map"></a>
     <p>${result.title}</p>
     `);

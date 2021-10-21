@@ -28,19 +28,28 @@
 
 <body>
   <%- include('./_header'); %>
+  <% if(user) { %>
   <h1>My profile page!</h1>
+  <section>
   <h2>Maps I created</h2>
   <div id="rowOf3MapsCreated">
   </div>
-
+</section>
+<section>
   <h2>Maps I contributed to</h2>
   <div id="rowOf3MapsContributed">
   </div>
-
+</section>
+<section>
   <h2>Maps I favourited</h2>
   <div id="rowOf3MapsFavourited">
   </div>
-
+</section>
+<% } else{ %>
+  <section>
+    <h1>Please login to view your profile page.</h1>
+  </section>
+  <% } %>
 </body>
 
 </html>
