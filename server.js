@@ -31,10 +31,18 @@ app.use(
   })
 );
 
+//cookies
+const cookieSession = require('cookie-session');
+app.use(cookieSession({
+  name: 'cookiemonster',
+  keys: ['my secret key', 'yet another secret key']
+}));
+
 app.use(express.static("public"));
 
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
+const authRoutes = require("./routes/auth");
 const indexRoutes = require("./routes/index_routes");
 const usersRoutes = require("./routes/users");
 const widgetsRoutes = require("./routes/widgets");
@@ -43,6 +51,7 @@ const profileRoutes = require("./routes/profile");
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
+app.use("/login", authRoutes(db));
 app.use("/index", indexRoutes(db));
 app.use("/api/users", usersRoutes(db));
 app.use("/api/widgets", widgetsRoutes(db));

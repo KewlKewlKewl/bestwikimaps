@@ -19,11 +19,18 @@
 
 <body>
   <h1>Have fun! 🥔</h1>
-
-  <div id="lastFavouritedMap">
-    <!-- return the thumbnail of the img -->
-  </div>
-
+  <% if(user) { %>
+    <section id="lastFavouritedMap">
+    </section>
+  <% } else{ %>
+    <section id="descWithMap">
+      <p>MapHub allows you to create interactive maps
+        You can easily make your own map by adding points, lines, polygons, or labels.
+        Add photos, organize items into groups.
+        Import and export data in GeoJSON, Shapefile, KML, GPX, or CSV formats.
+        Embed interactive maps on your website.</p>
+      </section>
+  <% } %>
   <h1>Explore New Maps</h1>
   <div id="rowOf3Maps">
   </div>
