@@ -69,7 +69,6 @@
                 <th>Long</th>
                 <th>Category</th>
                 <th>Image</th>
-                <th>Delete Point</th>
             </tr>`;
     for (let i = 0; i < markers.length; i++){
       if (!markers[i].pointImage) {
@@ -82,7 +81,6 @@
       tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
       tr += "<td>"+markers[i].category+"</td>";
       tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=150px width=250px src='${markers[i].pointImage}'></a></td>`;
-      tr += "<td>"+`<input type='button' value='Delete Point' class='removeItem'>`+"</td>";
       // tr += "<td>"+"<input type='button' value='Delete Row' onclick='deleteRowFunction()'>"+"</td>";
       // tr += "<td>"+"delete icon here"+"</td>";
       tr += "</tr>";

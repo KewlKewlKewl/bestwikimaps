@@ -180,10 +180,8 @@ module.exports = (db) => {
     db.query(deleteQueryString, deleteValues)
     .then(() => {
       generatePoints(markers, mapID);
+      res.redirect(`/api/maps/${mapID}`)
     })
-    // .then(() => {
-    //   res.redirect('/api/maps/create')
-    // })
     .catch(err => {
       console.log('POST EDIT MAP ERR:', err);
       res
@@ -224,6 +222,7 @@ module.exports = (db) => {
     db.query(queryStringMaps, valuesMaps) //query+insert map data first
     .then(() => {
       generatePoints(markers, mapID); //query+insert points data second. inside promise.then to ensure that this chains after map creation
+      res.redirect(`/api/maps/${mapID}`)
     })
       .catch(err => {
         console.error('points_err:', err.message);
