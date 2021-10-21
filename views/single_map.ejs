@@ -39,6 +39,8 @@
   <table id="pointsList">
   </table>
 
+
+  <% if (user) { %>
   <!-- Maps Delete -->
   <form id='delete-map' method='POST' ACTION='/api/maps/<%= queryObj[0].map_id %>/delete'>
     <button type='submit'>DELETE MAP</button>
@@ -48,6 +50,8 @@
   <form id='edit-map' method='GET' ACTION='/api/maps/<%= queryObj[0].map_id %>/edit'>
     <button type='submit'>EDIT MAP</button>
   </form>
+  <% } else { %>
+  <% } %>
 
   <!-- SCRIPTS -->
 <script>
