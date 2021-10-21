@@ -3,6 +3,9 @@
 body {
   display: flex;
   flex-direction: column;
+  background: #FFF7E6;
+  font-family: 'Lato', sans-serif;
+  font-size: larger;
 }
 
 #rowOf3Maps {
@@ -12,35 +15,39 @@ body {
   justify-content: space-between;
 }
 
- .eachMapImg{
+.eachMapImg{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-left: 3em;
   margin-right: 3em;
+  text-align: center;
 }
 
 #rowOf3Maps img {
-  // width: 40%;
+  width: 60%;
   // margin-left: auto;
   // margin-right: auto;
   // display: block;
-  display: block;
-  height: 200px;
-  width: auto;
+  // display: block;
+  // height: 250px;
+  // width: auto;
 }
 
 #descWithMap {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content:center;
-  margin: 0 9em 0 9em;
+  justify-content: stretch;
+  margin: 3em 0 0 0;
+  box-sizing: border-box;
 }
 
 #descWithMap p {
   width: 30vw;
+  font-size: 28px;
+  margin: 0 1em 0 1em;
 }
 
 #descWithMap img {
@@ -59,5 +66,23 @@ body {
   text-align: center;
 }
 
+section {
+  margin-bottom: 2em;
+  margin-left: 3em;
+  margin-right: 3em;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: stretch;
+}
+
+.fa-angle-double-right {
+  font-size: 50px;
+
+}
+.fa-angle-double-right:hover {
+  color: #009999;
+}
 
 

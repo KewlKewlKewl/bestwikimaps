@@ -16,11 +16,11 @@ app.use(cookieSession({
 }));
 
 module.exports = (db) => {
-
+  //post to 'login/'
   router.post('/', (req, res) => {
     //hard-code to set cookie params user_id =1
     req.session.user_id = 1;
-    res.redirect('/index');
+    res.redirect("/index");
     });
 
     return router;
