@@ -4,10 +4,10 @@ INSERT INTO favourites (user_id, map_id)
 VALUES (1, 'xbY123');
 
 INSERT INTO favourites (user_id, map_id)
-VALUES (2, 'xbY124');
+VALUES (1, 'xbY124');
 
 INSERT INTO favourites (user_id, map_id)
-VALUES (3, 'xbY125');
+VALUES (1, 'xbY125');
 
 INSERT INTO favourites (user_id, map_id)
-VALUES (4, 'xbY126');
+VALUES (1, 'xbY126');
