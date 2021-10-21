@@ -50,6 +50,24 @@ module.exports = (db) => {
       });
     });
 
+    router.get('/oneMap', (req, res) => {
+      const query = `
+      SELECT *
+      FROM maps
+      LIMIT 1;
+      `;
+
+      db.query(query)
+        .then((results) => {
+          res.json(results.rows);
+        })
+        .catch(err => {
+          console.error('points_err:', err.message);
+          res
+            .status(500)
+        });
+      });
+
   router.get('/rowOf3', (req, res) => {
     //console.log('inside row3?')
     const query3Imgs = `
