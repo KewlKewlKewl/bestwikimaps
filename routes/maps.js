@@ -25,7 +25,18 @@ module.exports = (db) => {
   };
 
   router.get('/create', (req, res) => {
-    res.render("create_map");
+    const cookieId = req.session.user_id;
+
+    if (!cookieId) {
+      res.redirect('/index');
+    }
+
+    const templateVars = {
+      user: req.session.user_id
+    };
+
+    res.render("create_map", templateVars);
+    // console.log('cookie:', req.session.user_id)
   });
 
   router.post('/create', (req, res) => {
@@ -191,11 +202,17 @@ module.exports = (db) => {
     // console.log(mapID)
     const queryString = `SELECT maps.title AS map_title, maps.description AS map_desc, points.*, users.name AS owner FROM maps JOIN points ON maps.id = map_id JOIN users on maps.user_id = users.id WHERE map_id = $1;`
     const values = [`${mapID}`]
+
+    const cookieId = req.session.user_id;
+
+    if (!cookieId) {
+      res.redirect('/index');
+    }
+
     db.query(queryString, values)
     .then(data => {
       const queryObj = data.rows;
-      console.log(queryObj);
-      const templateVars = { queryObj }
+      const templateVars = { queryObj, user: req.session.user_id }
       res.render('single_map_edit', templateVars);
     })
     .catch(err => {
@@ -255,11 +272,14 @@ module.exports = (db) => {
     JOIN users on maps.user_id = users.id
     WHERE map_id = $1;`;
     const values = [`${mapID}`];
+
+    const cookieId = req.session.user_id;
+
     db.query(queryString, values)
     .then(data => {
       const queryObj = data.rows;
-      const templateVars = { queryObj }
-      console.log(templateVars);
+      const templateVars = { queryObj, user: req.session.user_id }
+      // console.log(templateVars);
       res.render('single_map', templateVars);
     })
     .catch(err => {

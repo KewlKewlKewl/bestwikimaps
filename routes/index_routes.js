@@ -25,6 +25,7 @@ module.exports = (db) => {
     const templateVars = {
       user: req.session.user_id
     };
+    // console.log('cookie:', req.session.user_id)
     res.render("index", templateVars); //this is working?
   });
 
