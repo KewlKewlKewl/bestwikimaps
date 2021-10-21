@@ -7,6 +7,13 @@
 
 <!-- All Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet" href="/styles/_header.css" type="text/css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:ital,wght@0,300;0,400;1,900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:ital,wght@0,300;0,400;1,900&family=Oxygen:wght@700&display=swap" rel="stylesheet">
 
   <title>Document</title>
   <style>
@@ -20,6 +27,7 @@
 <!-- <script type="text/javascript" src="scripts/create_map.js"></script> -->
 </head>
 <body>
+<%- include('./_header'); %>
   <h1>Your New Map!</h1>
 <!-- City Form -->
 <form id="cityForm">
@@ -279,6 +287,7 @@
             }
         })
         .then((result)=>{
+          window.location.href = "/api/maps/" + result.mapID; //this changes the browser location (url location). AJAX + Routing is messy. an ajax call doesent allow you to redirect you have to send over data with the ajax. AJAX needs to send json
         })
         .catch((error)=>{
           // console.log('error:',error);
