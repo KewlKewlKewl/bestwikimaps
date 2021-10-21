@@ -60,7 +60,7 @@ module.exports = (db) => {
     LIMIT 1;
     `;
 
-    db.query(queryFaveMaps, ['2']) //query last favourited map
+    db.query(queryFaveMaps, ['1']) //query last favourited map
       .then((results) => {
         //console.log("querytrue1");
         //console.log("myfavemap:", results.rows);
@@ -194,7 +194,6 @@ module.exports = (db) => {
     db.query(queryString, values)
     .then(data => {
       const queryObj = data.rows;
-      console.log(queryObj);
       const templateVars = { queryObj }
       res.render('single_map_edit', templateVars);
     })
