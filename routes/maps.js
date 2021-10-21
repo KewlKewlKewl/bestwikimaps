@@ -57,6 +57,7 @@ module.exports = (db) => {
     FROM maps
     JOIN favourites ON maps.id = map_id
     WHERE favourites.user_id = $1
+    ORDER BY maps.id DESC
     LIMIT 1;
     `;
 
@@ -96,6 +97,7 @@ module.exports = (db) => {
       const query = `
       SELECT *
       FROM maps
+      ORDER BY id DESC
       LIMIT 1;
       `;
 
@@ -247,6 +249,7 @@ module.exports = (db) => {
 
   router.get('/:mapid', (req,res) => {
     const mapID = req.params.mapid //need to have a request coming with the mapid of the selected map
+    console.log("mapID:", mapID);
     const queryString = `
     SELECT maps.title AS map_title, maps.description AS map_desc, points.*, users.name AS owner
     FROM maps
@@ -258,6 +261,7 @@ module.exports = (db) => {
     .then(data => {
       const queryObj = data.rows;
       const templateVars = { queryObj }
+      console.log(templateVars);
       res.render('single_map', templateVars);
     })
     .catch(err => {
