@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <link rel="stylesheet" href="/styles/_header.css" type="text/css"/>
+
   <title>Viewing Map</title>
   <style>
     #map {
@@ -17,6 +21,7 @@
 </head>
 
 <body>
+  <%- include('./_header'); %>
   <h1><%= queryObj[0].map_title %></h1>
   <h3>Description: <%= queryObj[0].map_desc %></h3>
   <h3>Owner: <%= queryObj[0].owner %></h3>
@@ -69,7 +74,6 @@
                 <th>Long</th>
                 <th>Category</th>
                 <th>Image</th>
-                <th>Delete Point</th>
             </tr>`;
     for (let i = 0; i < markers.length; i++){
       if (!markers[i].pointImage) {
@@ -82,7 +86,6 @@
       tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
       tr += "<td>"+markers[i].category+"</td>";
       tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=150px width=250px src='${markers[i].pointImage}'></a></td>`;
-      tr += "<td>"+`<input type='button' value='Delete Point' class='removeItem'>`+"</td>";
       // tr += "<td>"+"<input type='button' value='Delete Row' onclick='deleteRowFunction()'>"+"</td>";
       // tr += "<td>"+"delete icon here"+"</td>";
       tr += "</tr>";

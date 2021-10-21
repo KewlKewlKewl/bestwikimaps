@@ -7,6 +7,13 @@
 
 <!-- All Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet" href="/styles/_header.css" type="text/css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:ital,wght@0,300;0,400;1,900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:ital,wght@0,300;0,400;1,900&family=Oxygen:wght@700&display=swap" rel="stylesheet">
 
   <title>Document</title>
   <style>
@@ -20,6 +27,7 @@
 <!-- <script type="text/javascript" src="scripts/create_map.js"></script> -->
 </head>
 <body>
+<%- include('./_header'); %>
   <h1>Your New Map!</h1>
 <!-- City Form -->
 <form id="cityForm">
@@ -40,7 +48,7 @@
     <input type="text" name="pointTitle" id="pointTitle"><br>
     <label for="pointDescription">Point Description</label><br>
     <input type="text" name="pointDescription" id="pointDescription"><br>
-    <label for="point-image"">Point Image</label><br>
+    <label for="point-image">Point Image</label><br>
     <input type="text" placeholder="http://" name="point-image" id="point-image"><br>
     <label for="category">Choose a category:</label>
     <select name="category" id="category">
@@ -76,49 +84,37 @@
 
   let map;
 
-  const visualMarkers = [];
+  // This array takes in all visualMarkers aka what is actually being displayed on the map
+  let visualMarkers = [];
 
   //Array of marker data (this is what's later inserted into the points DB so it has to contain only what we want saved)
   const markers = [
+    // Sample Marker Data
       // {
       //     coordinates:{lat:29.9841,lng:-90.1529},
       //     iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
       //     pointTitle:'test1',
       //     pointDescription:'test1',
       //     category:'Food'
-      // },
-      // {
-      //     coordinates:{lat:29.9146,lng:-90.0540},
-      //     pointTitle:'test2',
-      //     pointDescription:'test2',
-      //     category:'Shopping'
-      // },
-      // {
-      //     coordinates:{lat:30.4583,lng:-91.1403},
-      //     pointTitle:'test3',
-      //     pointDescription:'test3',
-      //     category:'Nightlife'
       // }
   ];
 
-  // a function that returns the URL associated with the marker category chosen in the "category" ID element
-
-  // sets all of the points back on the map
+  // displays all visual markers on the map
   function setMapOnAll(map) {
         for (let i = 0; i < visualMarkers.length; i++) {
         visualMarkers[i].setMap(map);
         }
   }
 
+  // hides all visual markers on the map
   function removeMarkers() {
     for(let i = 0; i < visualMarkers.length; i++){
         visualMarkers[i].setMap(null);
     }
   }
 
-  // this generates the individual point elements within div tags (displayed in #pointsList)
+  // this generates the table which contains all point elements (these are then inserted and displayed in #pointsList)
   const generatePointsList = function(markers){
-    console.log("generatePointsList", markers);
 
     let t = `<tr>
                 <th >Title</th>
@@ -133,6 +129,7 @@
       if (!markers[i].pointImage) {
         markers[i].pointImage = 'https://i.pinimg.com/474x/b4/7b/96/b47b9623ba93546b9a2c412e1abe9306.jpg'; //if db or user does not have a image -> marker image is given a default
       }
+      // ultra critical that this tr id does not change - it must remain as the pointTitle or various features will not work
       let tr = `<tr id = "${markers[i].pointTitle}">`;
       tr += "<td>"+markers[i].pointTitle+"</td>";
       tr += "<td>"+markers[i].pointDescription+"</td>";
@@ -141,18 +138,16 @@
       tr += "<td>"+markers[i].category+"</td>";
       tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=150px width=250px src='${markers[i].pointImage}'></a></td>`;
       tr += "<td>"+`<input type='button' value='Delete Point' class='removeItem'>`+"</td>";
-      // tr += "<td>"+"<input type='button' value='Delete Row' onclick='deleteRowFunction()'>"+"</td>";
-      // tr += "<td>"+"delete icon here"+"</td>";
       tr += "</tr>";
       t += tr;
     }
       document.getElementById("pointsList").innerHTML = t;
     };
 
-    // simple reference to the pointsTable
+    // simple to access reference to the pointsTable (shown above)
     const pointsTable = document.getElementById('pointsList');
 
-    // event listener for clicks onto any "delete point" button - removes the HTML element and marker from markers array (so it's not submitted to the DB when we save the map)
+    // event listener for clicks onto any "delete point" button in the pointTable - deletes visual HTML element, marker from markers, and visualMarker from map
     pointsTable.addEventListener('click', (event) => {
 
       // if you click anywhere in the table aside from the removeItem button - it does nothing
@@ -167,21 +162,17 @@
       // this counter keeps track of the marker index that we removed from the markers array
       let removedMarkerIndex = 0;
 
-      // find the index of the marker from the markers array using the pointTitle - this index is then used to remove the marker from the markers list and to remove the visual marker - WARNING, each point title must be unique using this logic
+      // finds the index of the marker from the markers array using the pointTitle - this index is then used to remove the marker from the markers list and to remove the visual marker
+      // WARNING, each point title must be unique using this logic
       for (let i = 0; i < markers.length; i++) {
         if (markers[i].pointTitle === deletedPointTitle) {
           removedMarkerIndex = i;
-          console.log(markers);
+          // console.log(markers);
           // console.log(removedMarkerIndex);
         }
       }
 
-      console.log(markers[removedMarkerIndex].coordinates.lat);
-      console.log(visualMarkers[0].position.lat().toFixed(5));
-      console.log(markers[removedMarkerIndex].coordinates.lng);
-      console.log(visualMarkers[0].position.lng().toFixed(5));
-
-      // saves the respect lat and lng for the removed marker from the markers array
+      // saves the respective lat and lng for the removed marker from the markers array
       let markerLat = markers[removedMarkerIndex].coordinates.lat;
       let markerLng = markers[removedMarkerIndex].coordinates.lng;
 
@@ -197,10 +188,8 @@
       // this removes the marker (aka point) we deleted from the markers array
       markers.splice(removedMarkerIndex, 1);
 
-      // I think* this is for the button's functionality but I haven't noticed it actually do anything yet
+      // I think* this is for the button's functionality but I haven't noticed it actually do anything yet (scared to remove)
       event.preventDefault();
-
-      // This re-sets the map with points
 
       // this deletes the actual HTML element from the DOM
       event.target.parentNode.parentNode.remove();
@@ -209,14 +198,16 @@
 
     // Initializes the Google map based on currently hard-coded lat, long values
     function initMap() {
-      //set up initial map for New Orleans as default
+
       const options = {  // Creates map options to add to the default map.
           zoom:8,
-          center:{lat:51.0447,lng:-114.0719}
+          center:{lat:51.0447,lng:-114.0719} // hard coded to center on Calgary currently
       }
-      //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
+
+      // sets the map variable to the new map
       map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options
 
+      // takes in a category (from various sources) and returns one of the URL's listed below which is fed to addMarker to set the icon image of each marker
       const iconSelector = (category) => {
         const iconOptions = {
           Food: "https://img.icons8.com/office/40/000000/hamburger.png",
@@ -227,17 +218,14 @@
         const iconOptionKeys = Object.keys(iconOptions);
 
         for (const key of iconOptionKeys) {
-          console.log("key:", key);
-          console.log("category:", category);
 
           if (category === key) {
-            console.log("they match!");
             return iconOptions[key];
           }
         }
       };
 
-      //render map of user input location (for now, Vancouver or Calgary only)
+      //renders map of user inputted location (for now, Vancouver or Calgary only)
       document.getElementById("cityForm").addEventListener('submit', () => {
         event.preventDefault();
         let cityName = document.getElementById("cityName").value;
@@ -256,23 +244,19 @@
         }
       });
 
-      //Listens for clicks on the map
+      //Listens for clicks on the map and then creates a marker followed by displaying the lat and lng of that marker in the "marker_coords" ID element (to be used elsewhere)
       google.maps.event.addListener(map, 'click', function(event){
-
-        // a function that returns the URL associated with the marker category chosen in the "category" ID element
 
         addMarker({coordinates:event.latLng, iconImage: iconSelector(document.getElementById("category").value)}); //Add marker
 
           document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
-          console.log(visualMarkers[0].position.lat());
-          console.log(visualMarkers[0].position.lng());
+          // console.log(visualMarkers[0].position.lat());
+          // console.log(visualMarkers[0].position.lng());
         });
 
-      // Listens for the submission of the pointForm button which then creates a markerElement containing coordinates (lat, lng), pointTitle, pointDescription
+      // Listens for the submission of the pointForm button which then creates a marker element containing coordinates (lat, lng), pointTitle, pointDescription, category, and pointImage
       document.getElementById("pointForm").addEventListener('submit',(event) => {
         event.preventDefault();
-        //console.log("event", event);
-        //console.log("pointTitle", document.getElementById("pointTitle").value);
 
           markers.push(
             {
@@ -286,13 +270,13 @@
               pointImage: document.getElementById("point-image").value
             }
           );
-        // console.log(markers);
         generatePointsList(markers);
       });
 
       document.getElementById("mapsForm").addEventListener('submit', (event) => {
         event.preventDefault();
 
+        // upon hitting save map this submits the data for the map and markers (points) to then be inserted into the DB
         $.ajax({
           url: '/api/maps/create',
           method: "POST",
@@ -303,14 +287,12 @@
             }
         })
         .then((result)=>{
-          //does nothing
+          window.location.href = "/api/maps/" + result.mapID; //this changes the browser location (url location). AJAX + Routing is messy. an ajax call doesent allow you to redirect you have to send over data with the ajax. AJAX needs to send json
         })
         .catch((error)=>{
-          console.log('error:',error);
+          // console.log('error:',error);
         });
       });
-
-      console.log('outside markers', markers);
 
       function addMarker(props) {
 
@@ -320,64 +302,48 @@
           icon: props.iconImage,
         });
 
-        console.log("icon image:", props.iconImage);
-
-        // sends newly created marker into visualMarkers array with the coordinates
+        // sends newly created marker into visualMarkers array
         visualMarkers.push(marker);
-        // console.log("just updated visualMarkers:", visualMarkers)
 
-        // EXPERIMENTAL CODE to disallow more than one marker on the screen at a time
-        // function visualMarkerLimiter() {
-        //   console.log("visual marker length:", visualMarkers.length);
-        //   console.log("markers length:", markers.length);
-        //   if ((visualMarkers.length - markers.length) > 1) {
-        //     for (let j = 0; j < visualMarkers.length; j++) {
-        //       for (let i = 0; i < markers.length; i++) {
-        //         console.log("visualMarker lat:", visualMarkers[j].position.lat().toFixed(4));
-        //         console.log("markers lat:", parseFloat(markers[i].coordinates.lat).toFixed(4));
-        //         console.log("visualMarker lng:", visualMarkers[j].position.lng().toFixed(4));
-        //         console.log("markers lng:", parseFloat(markers[i].coordinates.lng).toFixed(4));
 
-        //         if (visualMarkers[j].position.lat().toFixed(4) === parseFloat(markers[i].coordinates.lat).toFixed(4) && visualMarkers[j].position.lng().toFixed(4) === parseFloat(markers[i].coordinates.lng).toFixed(4)) {
-        //           console.log("the visualMarker and marker matched!");
-        //           visualMarkers[j].setMap(map);
-        //         } else {
-        //           removeMarkers();
-        //           visualMarkers.splice(j, 1);
-        //           setMapOnAll(map);
-        //         }
-        //       }
-        //     }
-        //   }
-        // };
+        // this function prevents multiple unsaved markers from showing on the map
+        function visualMarkerLimiter() {
 
-        // visualMarkerLimiter();
+          // if the visualmarkers and markers lengths differ by more than one and markers is empty then it will simply delete the first visual marker and display the last
+          if (visualMarkers.length - markers.length > 1 && markers.length === 0) {
+            // console.log("This is showing because the markers.length is 0");
+            removeMarkers();
+            visualMarkers.splice(0, 1);
+            setMapOnAll(map);
+          }
 
-        // let markerLat = markers[removedMarkerIndex].coordinates.lat;
-        // let markerLng = markers[removedMarkerIndex].coordinates.lng;
-        // if (parseFloat(markerLat).toFixed(4) === visualMarkers[j].position.lat().toFixed(4) && parseFloat(markerLng).toFixed(4) === visualMarkers[j].position.lng().toFixed(4)) {
-        //   removeMarkers();
-        //   visualMarkers.splice(j, 1);
-        //   setMapOnAll(map);
-        // }
+          // this contains the validated visual markers (populated by the for loops below) which will then be pushed to markers
+          const validatedVisualMarkers = [];
 
-          // visualMarkers.push({marker, coordinates: props.coordinates});
+          if (visualMarkers.length - markers.length > 1 && markers.length >= 1) {
+            for (let j = 0; j < visualMarkers.length; j++) {
+              for (let i = 0; i < markers.length; i++) {
+                // for ease of validating that the marker and visualmarker lats and lngs are matching
+                // console.log("visualMarker lat:", visualMarkers[j].position.lat().toFixed(4));
+                // console.log("markers lat:", parseFloat(markers[i].coordinates.lat).toFixed(4));
+                // console.log("visualMarker lng:", visualMarkers[j].position.lng().toFixed(4));
+                // console.log("markers lng:", parseFloat(markers[i].coordinates.lng).toFixed(4));
 
-          // if(props.iconImage) {  //Check for custom icon
-          //   marker.setIcon(props.iconImage); //Set icon image
-          // }
-
-          // if(props.content) { //Check content
-          //   let infoWindow = new google.maps.InfoWindow({
-          //     content:props.content
-          //   });
-
-          //   marker.addListener('click', function() {
-          //     infoWindow.open(map,marker);
-          //   });
-          // }
+                if (visualMarkers[j].position.lat().toFixed(4) === parseFloat(markers[i].coordinates.lat).toFixed(4) && visualMarkers[j].position.lng().toFixed(4) === parseFloat(markers[i].coordinates.lng).toFixed(4)) {
+                  console.log("They matched!");
+                  validatedVisualMarkers.push(visualMarkers[j]);
+                }
+              }
+            }
+            removeMarkers();
+            // HUGE NOTE HERE - READ THIS - SET visualMarkers to a let variable instead of a const or this will fail
+            visualMarkers = validatedVisualMarkers;
+            setMapOnAll(map);
+          }
+        };
+        visualMarkerLimiter();
       }
-  }
+    }
 </script>
 
   <script async defer

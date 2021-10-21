@@ -5,15 +5,14 @@ body {
   display: flex;
   flex-direction: column;
   background: $backgroundColor;
-  align-content: center;
+  align-content: space-between;
+  align-items: stretch;
   justify-content: space-evenly;
-  margin-left: 3em;
-  margin-right: 3em;
   font-family: 'Lato', sans-serif;
   font-size: larger;
 }
 
-h2 {
+h1, h2 {
   flex: 0 1 auto;
   display: inline-block;
   vertical-align: bottom;
@@ -22,11 +21,16 @@ h2 {
 }
 
 #rowOf3MapsCreated, #rowOf3MapsContributed, #rowOf3MapsFavourited {
+  // display: flex;
+  // flex-direction: row;
+  // align-items: flex-start;
+  // justify-content: space-between;
+  // align-content: flex-start;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  align-content: flex-start;
+  align-content: stretch;
 }
 
 .eachMapImg{
@@ -39,9 +43,9 @@ h2 {
 }
 
 img {
-  //display: block;
-  height: 200px;
-  width: auto;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
 }
 
 .caption {

@@ -22,29 +22,32 @@ body {
   justify-content: center;
   margin-left: 3em;
   margin-right: 3em;
+  text-align: center;
 }
 
 #rowOf3Maps img {
-  // width: 40%;
+  width: 60%;
   // margin-left: auto;
   // margin-right: auto;
   // display: block;
-  display: block;
-  height: 250px;
-  width: auto;
+  // display: block;
+  // height: 250px;
+  // width: auto;
 }
 
 #descWithMap {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content:center;
-  margin: 1em 4em 0 4em;
+  justify-content: stretch;
+  margin: 3em 0 0 0;
+  box-sizing: border-box;
 }
 
 #descWithMap p {
-  width: 40vw;
+  width: 30vw;
   font-size: 28px;
+  margin: 0 1em 0 1em;
 }
 
 #descWithMap img {
@@ -64,13 +67,14 @@ body {
 }
 
 section {
+  margin-bottom: 2em;
   margin-left: 3em;
   margin-right: 3em;
   display: flex;
   flex-direction: row;
   align-content: center;
   align-items: center;
-  justify-content: center;
+  justify-content: stretch;
 }
 
 .fa-angle-double-right {

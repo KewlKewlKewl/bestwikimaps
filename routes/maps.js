@@ -15,17 +15,40 @@ const generateRandomString = require('../public/scripts/generate_string.js');
 module.exports = (db) => {
 
   // generatesPoints
-  const generatePoints = (markers, mapID) => {
+  const generatePoints = async (markers, mapID) => {
     for (const marker of markers) {
       const queryStringPoints = `INSERT INTO points (title, description, latitude, longitude, map_id, user_id, category, point_image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
       const valuesPoints = [marker.pointTitle, marker.pointDescription, marker.coordinates.lat, marker.coordinates.lng, mapID, '1', marker.category, marker.pointImage];
-      db.query(queryStringPoints, valuesPoints);
+      await db.query(queryStringPoints, valuesPoints);
     }
+    return;
   };
 
   router.get('/create', (req, res) => {
     res.render("create_map");
   });
+
+  router.post('/create', (req, res) => {
+    // console.log("req.body",req.body)
+    const markers = req.body.markers;
+    const mapID = generateRandomString();
+    const mapTitle = req.body.mapTitle;
+    const mapDesc = req.body.mapDescription;
+
+    const queryStringMaps = `INSERT INTO maps (id, title, description, user_id, preview_image) VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+    const valuesMaps = [`${mapID}`, `${mapTitle}`, `${mapDesc}`, '1', 'https://i.pinimg.com/474x/b4/7b/96/b47b9623ba93546b9a2c412e1abe9306.jpg'];
+
+    db.query(queryStringMaps, valuesMaps) //query+insert map data first
+    .then(async () => {
+      await generatePoints(markers, mapID); //query+insert points data second. inside promise.then to ensure that this chains after map creation
+      res.json({ mapID: mapID }) //ajax loaded the page but the mssg ajax sent didnt say anyhing about rendering a page. redirect + json does not combo well
+    })
+      .catch(err => {
+        console.error('points_err:', err.message);
+        res
+          .status(500)
+      });
+    });
 
   router.get('/favourite', (req, res) => {
     //console.log("index_routes_hi??");
@@ -49,6 +72,25 @@ module.exports = (db) => {
           .status(500)
       });
     });
+
+
+  router.post('/favourite', (req, res) => {
+    const mapID = req.body.map_id;
+    console.log(mapID);
+    const query = `INSERT INTO favourites (user_id, map_id) VALUES ($1, $2) RETURNING *`;
+    const values = [`1`, `${mapID}`];
+
+    db.query(query, values) //query last favourited map
+      .then((results) => {
+        console.log(results);
+      })
+      .catch(err => {
+        console.error('points_err:', err.message);
+        res
+          .status(500)
+      });
+    });
+
 
     router.get('/oneMap', (req, res) => {
       const query = `
@@ -144,30 +186,6 @@ module.exports = (db) => {
       });
     });
 
-  router.get('/:mapid', (req,res) => {
-    const mapID = req.params.mapid //need to have a request coming with the mapid of the selected map
-    console.log(mapID);
-    const queryString = `
-    SELECT maps.title AS map_title, maps.description AS map_desc, points.*, users.name AS owner
-    FROM maps
-    JOIN points ON maps.id = map_id
-    JOIN users on maps.user_id = users.id
-    WHERE map_id = $1;`;
-    const values = [`${mapID}`];
-    db.query(queryString, values)
-    .then(data => {
-      const queryObj = data.rows;
-      console.log(queryObj);
-      const templateVars = { queryObj }
-      res.render('single_map', templateVars);
-    })
-    .catch(err => {
-      console.log('GET single_map err:', err);
-      res
-        .status(500)
-    });
-  })
-
   router.get('/:mapid/edit', (req,res) => {
     const mapID = req.params.mapid //need to have a request coming with the mapid of the selected map
     // console.log(mapID)
@@ -196,12 +214,10 @@ module.exports = (db) => {
     const deleteValues = [mapID];
 
     db.query(deleteQueryString, deleteValues)
-    .then(() => {
-      generatePoints(markers, mapID);
+    .then(async () => { //async + await syntax . newer version of syntax that organizes async codes. await says wait for the respsonse of asynch function (the async). asycn key words goes at start of fcunoiont taht defines the function as async.  and the await waits for this to finish.
+      await generatePoints(markers, mapID);
+      res.json({ mapID: mapID });
     })
-    // .then(() => {
-    //   res.redirect('/api/maps/create')
-    // })
     .catch(err => {
       console.log('POST EDIT MAP ERR:', err);
       res
@@ -219,7 +235,7 @@ module.exports = (db) => {
     db.query(queryString, values)
     .then(data => {
       const queryObj = data.rows;
-      console.log(queryObj);
+      // console.log(queryObj);
       res.redirect('/api/maps/create')
     })
     .catch(err => {
@@ -229,44 +245,30 @@ module.exports = (db) => {
     });
   })
 
-  router.post('/create', (req, res) => {
-    // console.log("req.body",req.body)
-    const markers = req.body.markers;
-    const mapID = generateRandomString();
-    const mapTitle = req.body.mapTitle;
-    const mapDesc = req.body.mapDescription;
-
-    const queryStringMaps = `INSERT INTO maps (id, title, description, user_id, preview_image) VALUES ($1, $2, $3, $4, $5) RETURNING *`;
-    const valuesMaps = [`${mapID}`, `${mapTitle}`, `${mapDesc}`, '1', 'https://i.pinimg.com/474x/b4/7b/96/b47b9623ba93546b9a2c412e1abe9306.jpg'];
-
-    db.query(queryStringMaps, valuesMaps) //query+insert map data first
-    .then(() => {
-      generatePoints(markers, mapID); //query+insert points data second. inside promise.then to ensure that this chains after map creation
+  router.get('/:mapid', (req,res) => {
+    const mapID = req.params.mapid //need to have a request coming with the mapid of the selected map
+    const queryString = `
+    SELECT maps.title AS map_title, maps.description AS map_desc, points.*, users.name AS owner
+    FROM maps
+    JOIN points ON maps.id = map_id
+    JOIN users on maps.user_id = users.id
+    WHERE map_id = $1;`;
+    const values = [`${mapID}`];
+    db.query(queryString, values)
+    .then(data => {
+      const queryObj = data.rows;
+      const templateVars = { queryObj }
+      res.render('single_map', templateVars);
     })
-      .catch(err => {
-        console.error('points_err:', err.message);
-        res
-          .status(500)
-      });
+    .catch(err => {
+      console.log('GET single_map err:', err);
+      res
+        .status(500)
     });
-
-  router.post('/favourite', (req, res) => {
-    const mapID = req.body.map_id;
-    console.log(mapID);
-    const query = `INSERT INTO favourites (user_id, map_id) VALUES ($1, $2) RETURNING *`;
-    const values = [`1`, `${mapID}`];
-
-    db.query(query, values) //query last favourited map
-      .then((results) => {
-        console.log(results);
-      })
-      .catch(err => {
-        console.error('points_err:', err.message);
-        res
-          .status(500)
-      });
-    });
+  })
 
   return router;
 
 };
+
+

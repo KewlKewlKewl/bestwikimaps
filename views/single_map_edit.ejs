@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <link rel="stylesheet" href="/styles/_header.css" type="text/css"/>
+
   <title>Viewing Map</title>
   <style>
     #map {
@@ -17,6 +21,7 @@
 </head>
 
 <body>
+  <%- include('./_header'); %>
   <h1><%= queryObj[0].map_title %></h1>
   <h3>Description: <%= queryObj[0].map_desc %></h3>
   <h3>Owner: <%= queryObj[0].owner %></h3>
@@ -62,7 +67,7 @@
 
   let map;
 
-  const visualMarkers = [];
+  let visualMarkers = [];
 
   const queryData = <%- JSON.stringify(queryObj) %> //passes query object (templateVars) to <script> and allows us to use it in our JS. I DO NOT KNOW WHY THIS IS ERRORED, code works fine with nothing consoling with issues
   // console.log('qdata:',queryData)
@@ -100,19 +105,21 @@
                 <th>Category</th>
                 <th>Image</th>
                 <th>Delete Point</th>
+                <th>Save Point</th>
             </tr>`;
     for (let i = 0; i < markers.length; i++){
       if (!markers[i].pointImage) {
         markers[i].pointImage = 'https://i.pinimg.com/474x/b4/7b/96/b47b9623ba93546b9a2c412e1abe9306.jpg'; //if db or user does not have a image -> marker image is given a default
       }
       let tr = `<tr id = "${markers[i].pointTitle}">`;
-      tr += "<td>"+markers[i].pointTitle+"</td>";
-      tr += "<td>"+markers[i].pointDescription+"</td>";
+      tr += "<td contenteditable='true' autofocus>"+markers[i].pointTitle+"</td>";
+      tr += "<td  contenteditable='true'>"+markers[i].pointDescription+"</td>";
       tr += "<td id = 'lat'>"+markers[i].coordinates.lat+"</td>";
       tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
-      tr += "<td>"+markers[i].category+"</td>";
+      tr += "<td  contenteditable='true'>"+markers[i].category+"</td>";
       tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=150px width=250px src='${markers[i].pointImage}'></a></td>`;
       tr += "<td>"+`<input type='button' value='Delete Point' class='removeItem'>`+"</td>";
+      tr += "<td>"+`<input type='button' value='Edit Point' class='editItem'>`+"</td>";
       // tr += "<td>"+"<input type='button' value='Delete Row' onclick='deleteRowFunction()'>"+"</td>";
       // tr += "<td>"+"delete icon here"+"</td>";
       tr += "</tr>";
@@ -190,6 +197,67 @@
 
     });
 
+    console.log('original markers;', markers)
+
+    const iconSelector = (category) => {
+        const iconOptions = {
+          Food: "https://img.icons8.com/office/40/000000/hamburger.png",
+          Shopping: "https://img.icons8.com/office/40/000000/mastercard-credit-card.png",
+          Nature: "https://img.icons8.com/office/40/000000/forest.png",
+          Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
+        };
+        const iconOptionKeys = Object.keys(iconOptions);
+
+        for (const key of iconOptionKeys) {
+          console.log("key:", key);
+          console.log("category:", category);
+
+          if (category === key) {
+            console.log("they match!");
+            return iconOptions[key];
+          }
+        }
+      };
+
+
+    //EDIT POINT LOGIC
+    pointsTable.addEventListener('click', (event) => {
+      // if you click anywhere in the table aside from the removeItem button - it does nothing
+      if (!event.target.classList.contains('editItem')) {
+        return;
+      }
+      const editedPointTitle = event.target.parentNode.parentNode.id;
+      const htmlNodeArray = event.target.parentNode.parentNode.children
+      console.log(editedPointTitle)
+      console.log(htmlNodeArray)
+      for (marker of markers) {
+        if (marker.pointTitle === editedPointTitle) {
+          marker.pointTitle = htmlNodeArray[0].innerHTML;
+          marker.pointDescription = htmlNodeArray[1].innerHTML;
+          marker.category = htmlNodeArray[4].innerHTML;
+          marker.content = htmlNodeArray[0].innerHTML;
+          // iconSelector(htmlNodeArray[4].innerHTML);
+
+          event.target.parentNode.parentNode.id = htmlNodeArray[0].innerHTML;
+
+          for (let i = 0; i < visualMarkers.length; i++) {
+            if (parseFloat(marker.coordinates.lat).toFixed(4) === visualMarkers[i].position.lat().toFixed(4) && parseFloat(marker.coordinates.lng).toFixed(4) === visualMarkers[i].position.lng().toFixed(4)) {
+              console.log("visual marker icon contents pre change:", visualMarkers[i].icon);
+              console.log("icon Selector Output:", iconSelector(marker.category));
+              visualMarkers[i].icon = iconSelector(marker.category);
+              console.log("visual marker icon contents post change:", visualMarkers[i].icon);
+            }
+          }
+        }
+      }
+      removeMarkers();
+      setMapOnAll(map);
+      console.log("NEW TITLE:", event.target.parentNode.parentNode.id)
+      console.log('edited markers:', markers)
+    })
+
+
+
 
     // Initializes the Google map based on currently hard-coded lat, long values
     function initMap() {
@@ -233,7 +301,7 @@
           document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
           console.log(visualMarkers[0].position.lat());
           console.log(visualMarkers[0].position.lng());
-        });
+      });
 
 
       // Listens for the submission of the pointForm button which then creates a markerElement containing coordinates (lat, lng), pointTitle, pointDescription
@@ -269,12 +337,13 @@
             }
         })
         .then((result)=>{
-          //does nothing
+          window.location.href = "/api/maps/" + result.mapID; //this forces the redirect
         })
         .catch((error)=>{
           console.log('error:',error);
         });
       });
+
 
       // Loop through markers
       for(let i = 0;i < markers.length;i++) {
@@ -309,6 +378,43 @@
 
           // sends newly created marker into visualMarkers array with the coordinates
           visualMarkers.push(marker);
+
+          function visualMarkerLimiter() {
+
+          // if the visualmarkers and markers lengths differ by more than one and markers is empty then it will simply delete the first visual marker and display the last
+          if (visualMarkers.length - markers.length > 1 && markers.length === 0) {
+            // console.log("This is showing because the markers.length is 0");
+            removeMarkers();
+            visualMarkers.splice(0, 1);
+            setMapOnAll(map);
+          }
+
+          // this contains the validated visual markers (populated by the for loops below) which will then be pushed to markers
+          const validatedVisualMarkers = [];
+
+          if (visualMarkers.length - markers.length > 1 && markers.length >= 1) {
+            for (let j = 0; j < visualMarkers.length; j++) {
+              for (let i = 0; i < markers.length; i++) {
+                // for ease of validating that the marker and visualmarker lats and lngs are matching
+                // console.log("visualMarker lat:", visualMarkers[j].position.lat().toFixed(4));
+                // console.log("markers lat:", parseFloat(markers[i].coordinates.lat).toFixed(4));
+                // console.log("visualMarker lng:", visualMarkers[j].position.lng().toFixed(4));
+                // console.log("markers lng:", parseFloat(markers[i].coordinates.lng).toFixed(4));
+
+                if (visualMarkers[j].position.lat().toFixed(4) === parseFloat(markers[i].coordinates.lat).toFixed(4) && visualMarkers[j].position.lng().toFixed(4) === parseFloat(markers[i].coordinates.lng).toFixed(4)) {
+                  console.log("They matched!");
+                  validatedVisualMarkers.push(visualMarkers[j]);
+                }
+              }
+            }
+            removeMarkers();
+            // HUGE NOTE HERE - READ THIS - SET visualMarkers to a let variable instead of a const or this will fail
+            visualMarkers = validatedVisualMarkers;
+            setMapOnAll(map);
+          }
+        };
+        visualMarkerLimiter();
+
           console.log("just updated visualMarkers:", visualMarkers)
 
           // if(props.iconImage) {  //Check for custom icon
