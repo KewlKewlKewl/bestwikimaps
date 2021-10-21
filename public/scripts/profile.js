@@ -31,6 +31,7 @@ $(document).ready(function(){
       `);
       $(divID).append($eachMapImg);
     }
+    $(divID).append(`<div><i class="fas fa-angle-double-right"></i></div>`);
     return;
   }
 
