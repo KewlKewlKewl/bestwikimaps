@@ -178,9 +178,9 @@ module.exports = (db) => {
     const deleteValues = [mapID];
 
     db.query(deleteQueryString, deleteValues)
-    .then(() => {
+    .then((res) => {
       generatePoints(markers, mapID);
-      res.redirect(`/api/maps/${mapID}`)
+      res.redirect(`/api/maps/create`)
     })
     .catch(err => {
       console.log('POST EDIT MAP ERR:', err);
