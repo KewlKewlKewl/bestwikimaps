@@ -15,6 +15,10 @@ module.exports = (db) => {
   // });
 
   router.get('/', (req, res) => {
+    if (!req.session.user_id) {
+      res.redirect('/index');
+    }
+
     const templateVars = {
       user: req.session.user_id
     };
