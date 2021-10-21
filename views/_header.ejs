@@ -4,7 +4,7 @@
       <a class="logo" href="/./index">Wik<i class="fas fa-map-pin"></i>Maps</a>
     </div>
 
-
+    <% if (user) { %>
     <div class="other">
       <div class="nav-dropdown">
         <a id='create-ref' href="/api/maps/create">
@@ -12,6 +12,7 @@
           <i class="far fa-map"></i>
         </a>
       </div>
+    <% } %>
 
       <div class="authentication">
       <% if (user) { %>

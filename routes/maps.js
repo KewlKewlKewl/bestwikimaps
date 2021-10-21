@@ -255,7 +255,7 @@ module.exports = (db) => {
     .then(data => {
       const queryObj = data.rows;
       // console.log(queryObj);
-      res.redirect('/api/maps/create')
+      res.redirect('/index')
     })
     .catch(err => {
       console.log('DELETE MAP ERR:', err);
