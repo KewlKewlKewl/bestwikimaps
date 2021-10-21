@@ -51,7 +51,7 @@ const profileRoutes = require("./routes/profile");
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
-app.use("/login", authRoutes(db));
+app.use("/auth", authRoutes(db));
 app.use("/index", indexRoutes(db));
 app.use("/api/users", usersRoutes(db));
 app.use("/api/widgets", widgetsRoutes(db));

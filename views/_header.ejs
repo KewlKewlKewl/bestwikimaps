@@ -11,25 +11,20 @@
           Create Maps
           <i class="far fa-map"></i>
         </a>
-        <!-- <div class="dropdown-content">
-          <a href="#">NewMap</a>
-          <a href="#">ViewMaps</a>
-          <a href="#">MyMaps</a>
-        </div> -->
       </div>
 
       <div class="authentication">
-      <!-- tag if (userCookie) { tag -->
-        <!-- <div class="auth-user">
+      <% if (user) { %>
+        <div class="auth-user">
           <a class = 'button-1' href='/./profile'>Profile</a> |
           <a class = 'button-2' href='#' id='logout-ref'>Logout</a>
-        </div> -->
-      <!-- tag } else { tag -->
+        </div>
+      <% } else { %>
         <div class="user">
           <a class = 'button-1' href='#' id='login-ref'>Login</a> |
           <a class = 'button-2' href='#'>SignUp</a>
         </div>
-      <!-- tag } tag -->
+      <% } %>
       </div>
     </div>
 
