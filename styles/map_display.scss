@@ -1,0 +1,44 @@
+#mapAndForms {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+}
+
+#mapsForm {
+  padding-bottom: 75px;
+  font-size: 20px;
+}
+
+#marker_coords {
+  display: none;
+}
+
+#latHeader {
+  display: none;
+}
+
+#longHeader {
+  display: none;
+}
+
+#lat {
+  display: none;
+}
+
+#long {
+  display: none;
+}
+
+body {
+  background-color: #FFF7E6;
+  font-family: 'Lato', sans-serif;
+  h1 {
+    font-family: 'Oxygen', sans-serif;
+  }
+}
+
+#rightOfMap {
+  align-self: center;
+  padding-left: 80px;
+  justify-content: center;
+}

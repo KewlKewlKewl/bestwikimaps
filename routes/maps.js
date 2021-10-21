@@ -246,6 +246,7 @@ module.exports = (db) => {
 
   router.get('/:mapid', (req,res) => {
     const mapID = req.params.mapid //need to have a request coming with the mapid of the selected map
+    console.log("mapID:", mapID);
     const queryString = `
     SELECT maps.title AS map_title, maps.description AS map_desc, points.*, users.name AS owner
     FROM maps
@@ -257,6 +258,7 @@ module.exports = (db) => {
     .then(data => {
       const queryObj = data.rows;
       const templateVars = { queryObj }
+      console.log(templateVars);
       res.render('single_map', templateVars);
     })
     .catch(err => {
