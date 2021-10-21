@@ -1,0 +1,25 @@
+#mapAndForms {
+  display: flex;
+  flex-direction: row;
+}
+
+#mapsForm {
+  padding-bottom: 75px;
+}
+
+#marker_coords {
+  visibility: hidden;
+}
+
+body {
+  background-color: #FFF7E6;
+  font-family: 'Lato', sans-serif;
+  h1 {
+    font-family: 'Oxygen', sans-serif;
+  }
+}
+
+#rightOfMap {
+  align-self: center;
+  padding-left: 80px;
+}

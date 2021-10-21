@@ -4,6 +4,18 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/styles/map_display.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Regular Text Font: -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+
+<!-- <h1> Your New Map Text Style: -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
 
 <!-- All Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
@@ -12,7 +24,7 @@
   <style>
     #map {
         height: 400px;
-        width: 75%;
+        width: 60%;
     }
   </style>
 <!-- Requiring jQuery from host server -->
@@ -25,32 +37,48 @@
 <form id="cityForm">
   <label for="cityName">City Name</label><br>
   <input type="text" name="cityName" id="cityName"><br>
-  <label for="countryName">Country Name</label><br>
-  <input type="text" name="countryName" id="countryName"><br>
+  <!-- Temporary Block of Country Section for Styling -->
+  <!-- <label for="countryName">Country Name</label><br>
+  <input type="text" name="countryName" id="countryName"><br> -->
   <button type='submit' class='cityCountryButton'>Show map!</button>
 </form>
 
-<!-- Map -->
+<div id='mapAndForms'>
+  <!-- Map Div -->
   <div id="map">
   </div>
 
-  <!-- Point Form -->
-  <form id="pointForm">
-    <label for="pointTitle">Point Title</label><br>
-    <input type="text" name="pointTitle" id="pointTitle"><br>
-    <label for="pointDescription">Point Description</label><br>
-    <input type="text" name="pointDescription" id="pointDescription"><br>
-    <label for="point-image">Point Image</label><br>
-    <input type="text" placeholder="http://" name="point-image" id="point-image"><br>
-    <label for="category">Choose a category:</label>
-    <select name="category" id="category">
-      <option value="Food">Food</option>
-      <option value="Shopping">Shopping</option>
-      <option value="Nature">Nature</option>
-      <option value="Nightlife">Nightlife</option>
-    </select>
-    <button type='submit' class='pointButton'>Create Point</button>
-  </form>
+  <!-- Div to Help with Page Styling -->
+  <div id ='rightOfMap'>
+    <!-- Maps Form -->
+    <form id="mapsForm">
+      <label for="mapTitle">Map Title</label><br>
+      <input type="text" name="mapTitle" id="mapTitle"><br>
+      <label for="mapDescription">Map Description</label><br>
+      <input type="text" name="mapDescription" id="mapDescription"><br>
+      <button type='submit' class='pointButton'>Save Map</button>
+    </form>
+
+    <!-- Point Form -->
+    <form id="pointForm">
+      <label for="pointTitle">Point Title</label><br>
+      <input type="text" name="pointTitle" id="pointTitle"><br>
+      <label for="pointDescription">Point Description</label><br>
+      <input type="text" name="pointDescription" id="pointDescription"><br>
+      <label for="point-image">Point Image</label><br>
+      <input type="text" placeholder="http://" name="point-image" id="point-image"><br>
+      <label for="category">Choose a category:</label>
+      <br>
+      <select name="category" id="category">
+        <option value="Food">Food</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Nature">Nature</option>
+        <option value="Nightlife">Nightlife</option>
+      </select>
+      <button type='submit' class='pointButton'>Create Point</button>
+    </form>
+  </div>
+</div>
 
   <!-- This is where the individual marker coords are displayed and fetched for the generation of each markers array element -->
   <div id="marker_coords">
@@ -59,15 +87,6 @@
   <!-- This is where all saved points are displayed -->
   <table id="pointsList">
   </table>
-
-  <!-- Maps Form -->
-  <form id="mapsForm">
-    <label for="mapTitle">Map Title</label><br>
-    <input type="text" name="mapTitle" id="mapTitle"><br>
-    <label for="mapDescription">Map Description</label><br>
-    <input type="text" name="mapDescription" id="mapDescription"><br>
-    <button type='submit' class='pointButton'>Save Map</button>
-  </form>
 
   <!-- SCRIPTS -->
 <script>
@@ -108,7 +127,8 @@
   // this generates the table which contains all point elements (these are then inserted and displayed in #pointsList)
   const generatePointsList = function(markers){
 
-    let t = `<tr>
+    let t = `
+            <tr>
                 <th >Title</th>
                 <th>Description</th>
                 <th>Lat</th>
@@ -128,7 +148,7 @@
       tr += "<td id = 'lat'>"+markers[i].coordinates.lat+"</td>";
       tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
       tr += "<td>"+markers[i].category+"</td>";
-      tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=150px width=250px src='${markers[i].pointImage}'></a></td>`;
+      tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=75px width=150px src='${markers[i].pointImage}'></a></td>`;
       tr += "<td>"+`<input type='button' value='Delete Point' class='removeItem'>`+"</td>";
       tr += "</tr>";
       t += tr;
@@ -192,7 +212,7 @@
     function initMap() {
 
       const options = {  // Creates map options to add to the default map.
-          zoom:8,
+          zoom:12,
           center:{lat:51.0447,lng:-114.0719} // hard coded to center on Calgary currently
       }
 
