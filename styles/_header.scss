@@ -7,11 +7,19 @@
   align-items: center;
 }
 
+#create-ref {
+  text-decoration: none;
+  color: #FFF7E6;
+  font-family: 'Abril Fatface', cursive;
+  font-family: 'Lato', sans-serif;
+
+}
+
 .nav-dropdown {
   margin-right: 20px;
   margin-bottom: 1px;
   text-decoration: none;
-  color: #916508;
+  color: #FFF7E6;
   font-family: 'Abril Fatface', cursive;
   font-family: 'Lato', sans-serif;
   background-color: #099;
@@ -20,38 +28,38 @@
 }
 
 .nav-dropdown:hover {
-  box-shadow: 0px 0px 3px 3px #916508;
+  box-shadow: 0px 0px 2px 2px #FFF7E6;
 }
 
-#button-2 {
+.button-2 {
   text-decoration: none;
-  color: #916508;
+  color: #FFF7E6;
   font-family: 'Abril Fatface', cursive;
   font-family: 'Lato', sans-serif;
   background-color: #099;
   transition: box-shadow .1s;
 }
 
-#button-1 {
+.button-1 {
   text-decoration: none;
-  color: #916508;
+  color: #FFF7E6;
   font-family: 'Abril Fatface', cursive;
   font-family: 'Lato', sans-serif;
   background-color: #099;
   transition: box-shadow .1s;
 }
 
-#button-1:hover {
-  box-shadow: 0px 0px 3px 3px #916508;
+.button-1:hover {
+  box-shadow: 0px 0px 2px 2px #FFF7E6;
 }
 
-#button-2:hover {
-  box-shadow: 0px 0px 3px 3px #916508;
+.button-2:hover {
+  box-shadow: 0px 0px 2px 2px #FFF7E6;
 }
 
 .nav-bar {
   background-color: #099;
-  color: #916508;
+  color: #FFF7E6;
   height: 150px;
   width: 100vw;
   display: flex;
@@ -61,7 +69,7 @@
 }
 
 .logo {
-  color: #916508;
+  color: #FFF7E6;
   font-family: 'Abril Fatface', cursive;
   font-family: 'Lato', sans-serif;
   font-family: 'Oxygen', sans-serif;
@@ -85,8 +93,7 @@
   font-size: 20px;
   font-family: 'Abril Fatface', cursive;
   font-family: 'Lato', sans-serif;
-  color: #916508;
+  color: #FFF7E6;
   text-decoration: none;
-  background-color:white;
 }
 
