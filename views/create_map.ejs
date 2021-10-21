@@ -30,8 +30,8 @@
   <title>Document</title>
   <style>
     #map {
-        height: 720px;
-        width: 75%;
+        height: 705px;
+        width: 80%;
     }
   </style>
 <!-- Requiring jQuery from host server -->
@@ -41,16 +41,17 @@
 </head>
 <body>
 <%- include('./_header'); %>
-  <h1>Your New Map!</h1>
-<!-- City Form -->
+<div id = 'h1AndSearch'>
+<h1>Your New Map!</h1>
 <form id="cityForm">
-  <label for="cityName">City Name</label><br>
+  <label for="cityName">Search By City</label><br>
   <input type="text" name="cityName" id="cityName"><br>
   <!-- Temporary Block of Country Section for Styling -->
   <!-- <label for="countryName">Country Name</label><br>
   <input type="text" name="countryName" id="countryName"><br> -->
-  <button type='submit' class='cityCountryButton'>Show map!</button>
+  <button type='submit' class='cityCountryButton'>Generate Map</button>
 </form>
+</div>
 
 <div id='mapAndForms'>
   <!-- Map Div -->
@@ -61,22 +62,22 @@
   <div id ='rightOfMap'>
     <!-- Maps Form -->
     <form id="mapsForm">
-      <label for="mapTitle">Map Title</label><br>
+      <label for="mapTitle">Map Title:</label><br>
       <input type="text" name="mapTitle" id="mapTitle"><br>
-      <label for="mapDescription">Map Description</label><br>
+      <label for="mapDescription">Map Description:</label><br>
       <input type="text" name="mapDescription" id="mapDescription"><br>
       <button type='submit' class='pointButton'>Save Map</button>
     </form>
 
     <!-- Point Form -->
     <form id="pointForm">
-      <label for="pointTitle">Point Title</label><br>
+      <label for="pointTitle">Point Title:</label><br>
       <input type="text" name="pointTitle" id="pointTitle"><br>
-      <label for="pointDescription">Point Description</label><br>
+      <label for="pointDescription">Point Description:</label><br>
       <input type="text" name="pointDescription" id="pointDescription"><br>
-      <label for="point-image">Point Image</label><br>
+      <label for="point-image">Point Image:</label><br>
       <input type="text" placeholder="http://" name="point-image" id="point-image"><br>
-      <label for="category">Choose a category:</label>
+      <label for="category">Choose a Category:</label>
       <br>
       <select name="category" id="category">
         <option value="Food">Food</option>
@@ -157,8 +158,8 @@
       tr += "<td id = 'lat'>"+markers[i].coordinates.lat+"</td>";
       tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
       tr += "<td>"+markers[i].category+"</td>";
-      tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=75px width=150px src='${markers[i].pointImage}'></a></td>`;
-      tr += "<td>"+`<input type='button' value='Delete Point' class='removeItem'>`+"</td>";
+      tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=75px width=100px src='${markers[i].pointImage}'></a></td>`;
+      tr += "<td>"+`<input type='button' value="Delete" class='removeItem'>`+"</td>";
       tr += "</tr>";
       t += tr;
     }

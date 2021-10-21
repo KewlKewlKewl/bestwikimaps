@@ -1,18 +1,93 @@
+#h1AndSearch {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: space-between;
+}
+
+#cityForm {
+  #cityName {
+    font-size: 15px;
+    width: 125px;
+    text-align: center;
+  }
+  margin-bottom: 5px;
+  margin-right: 525px;
+  font-size: 20px;
+  button {
+    font-size: 15px;
+  }
+}
+
+body {
+  background-color: #FFF7E6;
+  font-family: 'Lato', sans-serif;
+  h1 {
+    padding-left: 25px;
+    font-family: 'Oxygen', sans-serif;
+    height: 30px;
+  }
+}
+
 #mapAndForms {
   display: flex;
   flex-direction: row;
   text-align: center;
 }
 
+#rightOfMap {
+  // align-self: center;
+  justify-content: center;
+}
+
+
+// map form styling
 #mapsForm {
-  padding-bottom: 75px;
+  font-size: 25px;
+  padding-bottom: 30px;
+  #mapTitle {
+    font-size: 15px;
+    margin-bottom:5px;
+    width: 250px;
+    align-self: center;
+    text-align: center;
+  }
+  button {
+    font-size: 20px;
+  }
+  #mapDescription {
+    font-size: 15px;
+    width: 250px;
+    align-self: center;
+    text-align: center;
+  }
+}
+
+#pointForm {
   font-size: 20px;
+  #pointTitle {
+    width: 250px;
+    text-align: center;
+    font-size: 15px;
+  }
+  #pointDescription {
+    width: 250px;
+    text-align: center;
+    font-size: 15px;
+  }
+  #point-image {
+    width: 250px;
+    font-size: 15px;
+  }
+  #category {
+    font-size: 15px;
+  }
+  button {
+    font-size: 15px;
+  }
 }
 
-#marker_coords {
-  display: none;
-}
-
+// Hides all of the lats and longs
 #latHeader {
   display: none;
 }
@@ -29,16 +104,13 @@
   display: none;
 }
 
-body {
-  background-color: #FFF7E6;
-  font-family: 'Lato', sans-serif;
-  h1 {
-    font-family: 'Oxygen', sans-serif;
-  }
+#marker_coords {
+  display: none;
 }
 
-#rightOfMap {
-  align-self: center;
-  padding-left: 80px;
-  justify-content: center;
+// table specific CSS
+table {
+  table-layout: fixed;
+  width: 500px;
+  padding-right:15px;
 }
