@@ -30,8 +30,8 @@
   <title>Document</title>
   <style>
     #map {
-        height: 400px;
-        width: 60%;
+        height: 720px;
+        width: 75%;
     }
   </style>
 <!-- Requiring jQuery from host server -->
@@ -85,6 +85,9 @@
       </select>
       <button type='submit' class='pointButton'>Create Point</button>
     </form>
+    <br>
+    <table id="pointsList">
+    </table>
   </div>
 </div>
 
@@ -93,8 +96,6 @@
   </div>
 
   <!-- This is where all saved points are displayed -->
-  <table id="pointsList">
-  </table>
 
   <!-- SCRIPTS -->
 <script>
@@ -135,12 +136,11 @@
   // this generates the table which contains all point elements (these are then inserted and displayed in #pointsList)
   const generatePointsList = function(markers){
 
-    let t = `
-            <tr>
-                <th >Title</th>
+    let t = `<tr>
+                <th>Title</th>
                 <th>Description</th>
-                <th>Lat</th>
-                <th>Long</th>
+                <th id ='latHeader'>Lat</th>
+                <th id ='longHeader'>Long</th>
                 <th>Category</th>
                 <th>Image</th>
                 <th>Delete Point</th>
@@ -220,7 +220,7 @@
     function initMap() {
 
       const options = {  // Creates map options to add to the default map.
-          zoom:12,
+          zoom:14,
           center:{lat:51.0447,lng:-114.0719} // hard coded to center on Calgary currently
       }
 

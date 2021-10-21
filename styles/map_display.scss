@@ -1,14 +1,32 @@
 #mapAndForms {
   display: flex;
   flex-direction: row;
+  text-align: center;
 }
 
 #mapsForm {
   padding-bottom: 75px;
+  font-size: 15px;
 }
 
 #marker_coords {
-  visibility: hidden;
+  display: none;
+}
+
+#latHeader {
+  display: none;
+}
+
+#longHeader {
+  display: none;
+}
+
+#lat {
+  display: none;
+}
+
+#long {
+  display: none;
 }
 
 body {
@@ -22,4 +40,5 @@ body {
 #rightOfMap {
   align-self: center;
   padding-left: 80px;
+  justify-content: center;
 }
