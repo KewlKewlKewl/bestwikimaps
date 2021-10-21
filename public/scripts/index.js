@@ -29,7 +29,7 @@ $(document).ready(function(){
       $eachMapImg = $(`
       <div class="eachMapImg">
       <a href="/api/maps/${map.id}"><img src="${map.preview_image}" alt="a popular map"></a>
-        <div class="test">
+        <div class="caption">
           <p>${map.title}</p>
           <span class="favouriteIcon" data-id="${map.id}"><i class="fas fa-heart"></i></span>
         </div>

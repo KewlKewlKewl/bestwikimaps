@@ -1,16 +1,32 @@
 // See: https://sass-lang.com/
+$backgroundColor:  #FFF7E6;
 
 body {
   display: flex;
   flex-direction: column;
+  background: $backgroundColor;
+  align-content: center;
+  justify-content: space-evenly;
+  margin-left: 3em;
+  margin-right: 3em;
+  font-family: 'Lato', sans-serif;
+  font-size: larger;
+}
+
+h2 {
+  flex: 0 1 auto;
+  display: inline-block;
+  vertical-align: bottom;
+  box-sizing: border-box;
+  width: 100%; //or any percentage width you want
 }
 
 #rowOf3MapsCreated, #rowOf3MapsContributed, #rowOf3MapsFavourited {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  align-content: center;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-content: flex-start;
 }
 
 .eachMapImg{
@@ -23,9 +39,19 @@ body {
 }
 
 img {
-  display: block;
+  //display: block;
   height: 200px;
   width: auto;
+}
+
+.caption {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%; //or any percentage width you want
 }
 
 

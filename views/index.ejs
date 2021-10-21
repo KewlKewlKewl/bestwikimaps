@@ -15,27 +15,31 @@
   <script type="text/javascript" src="/scripts/app.js"></script>
   <script type="text/javascript" src="/scripts/index.js"></script>
 
+  <!-- font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <h1>Have fun! 🥔</h1>
   <% if(user) { %>
     <section id="lastFavouritedMap">
     </section>
   <% } else{ %>
     <section id="descWithMap">
-      <p>MapHub allows you to create interactive maps
-        You can easily make your own map by adding points, lines, polygons, or labels.
-        Add photos, organize items into groups.
-        Import and export data in GeoJSON, Shapefile, KML, GPX, or CSV formats.
-        Embed interactive maps on your website.</p>
+      <p>BestWikiMaps allows you to create interactive maps.
+        You can easily make your own map by adding points.
+        Each point has a latitude & longitude, a title, a description, and an image.
+        Did you know that you can categorize your points as well?
+        Share a map with a friend today!</p>
       </section>
   <% } %>
   <h1>Explore New Maps</h1>
+  <section>
   <div id="rowOf3Maps">
   </div>
-  <div>put arrow icon here using i tag probably</div>
-
+  <div><i class="fas fa-angle-double-right"></i></div>
+  </section>
 </body>
 
 </html>

@@ -3,6 +3,9 @@
 body {
   display: flex;
   flex-direction: column;
+  background: #FFF7E6;
+  font-family: 'Lato', sans-serif;
+  font-size: larger;
 }
 
 #rowOf3Maps {
@@ -12,7 +15,7 @@ body {
   justify-content: space-between;
 }
 
- .eachMapImg{
+.eachMapImg{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,7 +30,7 @@ body {
   // margin-right: auto;
   // display: block;
   display: block;
-  height: 200px;
+  height: 250px;
   width: auto;
 }
 
@@ -36,11 +39,12 @@ body {
   flex-direction: row;
   align-items: center;
   justify-content:center;
-  margin: 0 9em 0 9em;
+  margin: 1em 4em 0 4em;
 }
 
 #descWithMap p {
-  width: 30vw;
+  width: 40vw;
+  font-size: 28px;
 }
 
 #descWithMap img {
@@ -59,5 +63,22 @@ body {
   text-align: center;
 }
 
+section {
+  margin-left: 3em;
+  margin-right: 3em;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.fa-angle-double-right {
+  font-size: 50px;
+
+}
+.fa-angle-double-right:hover {
+  color: #009999;
+}
 
 
