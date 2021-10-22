@@ -1,6 +1,6 @@
 -- Users table seeds here (Example)
 INSERT INTO users (name, email, password)
-VALUES ('Fez', 'fez@hotmail.com', 'test');
+VALUES ('Faez', 'fez@hotmail.com', 'test');
 
 INSERT INTO users (name, email, password)
 VALUES ('Amo', 'amo@hotmail.com', 'test');
