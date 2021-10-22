@@ -1,0 +1,77 @@
+body {
+  background-color: #FFF7E6;
+  font-family: 'Lato', sans-serif;
+  h1 {
+    padding-left: 25px;
+    font-family: 'Oxygen', sans-serif;
+    height: 30px;
+  }
+}
+
+#mapAndForms {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: center;
+  align-self: center;
+}
+
+#mainMapTitle {
+  margin-top: 20px;
+  font-size: 50px;
+}
+
+#mainMapDescription {
+  font-size: 25px;
+}
+
+#mapOwner {
+  font-size: 20px;
+  margin-bottom: 25px;
+  text-decoration: underline;
+}
+
+table {
+  table-layout: fixed;
+  width: 500px;
+  padding-right:15px;
+}
+
+#latHeader {
+  display: none;
+}
+
+#longHeader {
+  display: none;
+}
+
+#lat {
+  display: none;
+}
+
+#long {
+  display: none;
+}
+
+#editDeleteButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#edit-map {
+  button {
+    color: #FFF7E6;
+    background-color: #099;
+    font-size: 15.5px;
+  }
+}
+
+#delete-map {
+  button {
+    margin-left: 50px;
+    color: #FFF7E6;
+    background-color: rgba(255, 0, 0, 0.797);
+    font-size: 15.5px;
+  }
+}
