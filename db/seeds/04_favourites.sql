@@ -8,6 +8,3 @@ VALUES (1, 'xbY124');
 
 INSERT INTO favourites (user_id, map_id)
 VALUES (1, 'xbY125');
-
-INSERT INTO favourites (user_id, map_id)
-VALUES (1, 'xbY126');
