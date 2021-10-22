@@ -52,3 +52,26 @@ table {
 #long {
   display: none;
 }
+
+#editDeleteButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#edit-map {
+  button {
+    color: #FFF7E6;
+    background-color: #099;
+    font-size: 15.5px;
+  }
+}
+
+#delete-map {
+  button {
+    margin-left: 50px;
+    color: #FFF7E6;
+    background-color: rgba(255, 0, 0, 0.797);
+    font-size: 15.5px;
+  }
+}

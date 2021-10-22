@@ -1,0 +1,100 @@
+body {
+  background-color: #FFF7E6;
+  font-family: 'Lato', sans-serif;
+  h1 {
+    padding-left: 25px;
+    font-family: 'Oxygen', sans-serif;
+    height: 30px;
+  }
+}
+
+#mapAndForms {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+}
+
+#mainMapTitle {
+  margin-top: 20px;
+  font-size: 50px;
+  margin-bottom: 5px;
+}
+
+#mainMapDescription {
+  font-size: 25px;
+  margin-bottom: 5px;
+}
+
+#mapOwner {
+  font-size: 20px;
+  margin-bottom: 25px;
+  text-decoration: underline;
+}
+
+table {
+  table-layout: fixed;
+  width: 600px;
+  padding-right:15px;
+}
+
+#latHeader {
+  display: none;
+}
+
+#longHeader {
+  display: none;
+}
+
+#lat {
+  display: none;
+}
+
+#long {
+  display: none;
+}
+
+#pointForm {
+  font-size: 20px;
+  #pointTitle {
+    width: 250px;
+    text-align: center;
+    font-size: 15px;
+  }
+  #pointDescription {
+    width: 250px;
+    text-align: center;
+    font-size: 15px;
+  }
+  #point-image {
+    width: 250px;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  #category {
+    font-size: 15px;
+  }
+  button {
+    font-size: 15px;
+  }
+}
+
+#marker_coords {
+  display: none;
+}
+
+.removeItem {
+  color: #FFF7E6;
+  background-color: rgba(255, 0, 0, 0.797);
+}
+
+.editItem {
+  color: #FFF7E6;
+  background-color: #099;
+}
+
+button {
+  margin-top: 15px;
+  font-size: 20px;
+  color: #FFF7E6;
+  background-color: #099;
+}
