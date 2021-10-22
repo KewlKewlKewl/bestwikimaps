@@ -47,7 +47,7 @@ module.exports = (db) => {
     const mapDesc = req.body.mapDescription;
 
     const queryStringMaps = `INSERT INTO maps (id, title, description, user_id, preview_image) VALUES ($1, $2, $3, $4, $5) RETURNING *`;
-    const valuesMaps = [`${mapID}`, `${mapTitle}`, `${mapDesc}`, '1', 'https://i.pinimg.com/474x/b4/7b/96/b47b9623ba93546b9a2c412e1abe9306.jpg'];
+    const valuesMaps = [`${mapID}`, `${mapTitle}`, `${mapDesc}`, '1', 'https://geospatialmedia.s3.amazonaws.com/wp-content/uploads/2019/07/Apple-maps-app.png'];
 
     db.query(queryStringMaps, valuesMaps) //query+insert map data first
     .then(async () => {
