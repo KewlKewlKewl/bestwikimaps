@@ -7,7 +7,7 @@
   <!-- Main Page Style Sheet -->
   <link rel="stylesheet" type="text/css" href="/styles/map_display.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Regular Text Font: -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,9 +38,11 @@
   </style>
 <!-- Requiring jQuery from host server -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<!-- <script type="text/javascript" src="scripts/create_map.js"></script> -->
+<!-- Scripts -->
 <script type="text/javascript" src="/scripts/_header.js"></script>
+<script type="text/javascript" src="/scripts/app.js"></script>
 </head>
+
 <body>
 <%- include('./_header'); %>
 <div id = 'h1AndSearch'>
@@ -48,9 +50,6 @@
 <form id="cityForm">
   <label for="cityName">Search By City</label><br>
   <input type="text" name="cityName" id="cityName"><br>
-  <!-- Temporary Block of Country Section for Styling -->
-  <!-- <label for="countryName">Country Name</label><br>
-  <input type="text" name="countryName" id="countryName"><br> -->
   <button type='submit' class='cityCountryButton'>Generate Map</button>
 </form>
 </div>
@@ -123,51 +122,6 @@
       // }
   ];
 
-  // displays all visual markers on the map
-  function setMapOnAll(map) {
-        for (let i = 0; i < visualMarkers.length; i++) {
-        visualMarkers[i].setMap(map);
-        }
-  }
-
-  // hides all visual markers on the map
-  function removeMarkers() {
-    for(let i = 0; i < visualMarkers.length; i++){
-        visualMarkers[i].setMap(null);
-    }
-  }
-
-  // this generates the table which contains all point elements (these are then inserted and displayed in #pointsList)
-  const generatePointsList = function(markers){
-
-    let t = `<tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th id ='latHeader'>Lat</th>
-                <th id ='longHeader'>Long</th>
-                <th>Category</th>
-                <th>Image</th>
-                <th>Delete Point</th>
-            </tr>`;
-    for (let i = 0; i < markers.length; i++){
-      if (!markers[i].pointImage) {
-        markers[i].pointImage = 'https://i.pinimg.com/474x/b4/7b/96/b47b9623ba93546b9a2c412e1abe9306.jpg'; //if db or user does not have a image -> marker image is given a default
-      }
-      // ultra critical that this tr id does not change - it must remain as the pointTitle or various features will not work
-      let tr = `<tr id = "${markers[i].pointTitle}">`;
-      tr += "<td>"+markers[i].pointTitle+"</td>";
-      tr += "<td>"+markers[i].pointDescription+"</td>";
-      tr += "<td id = 'lat'>"+markers[i].coordinates.lat+"</td>";
-      tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
-      tr += "<td>"+markers[i].category+"</td>";
-      tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=75px width=100px src='${markers[i].pointImage}'></a></td>`;
-      tr += "<td>"+`<input type='button' value="Delete" class='removeItem'>`+"</td>";
-      tr += "</tr>";
-      t += tr;
-    }
-      document.getElementById("pointsList").innerHTML = t;
-    };
-
     // simple to access reference to the pointsTable (shown above)
     const pointsTable = document.getElementById('pointsList');
 
@@ -232,28 +186,12 @@
       map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options
 
       // takes in a category (from various sources) and returns one of the URL's listed below which is fed to addMarker to set the icon image of each marker
-      const iconSelector = (category) => {
-        const iconOptions = {
-          Food: "https://img.icons8.com/office/40/000000/hamburger.png",
-          Shopping: "https://img.icons8.com/office/40/000000/mastercard-credit-card.png",
-          Nature: "https://img.icons8.com/office/40/000000/forest.png",
-          Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
-        };
-        const iconOptionKeys = Object.keys(iconOptions);
 
-        for (const key of iconOptionKeys) {
-
-          if (category === key) {
-            return iconOptions[key];
-          }
-        }
-      };
 
       //renders map of user inputted location (for now, Vancouver or Calgary only)
       document.getElementById("cityForm").addEventListener('submit', () => {
         event.preventDefault();
         let cityName = document.getElementById("cityName").value;
-        //console.log("cityName",cityName);
         if (cityName === "Vancouver") {
           map.setCenter({
             lat: 49.2827,
@@ -274,8 +212,6 @@
         addMarker({coordinates:event.latLng, iconImage: iconSelector(document.getElementById("category").value)}); //Add marker
 
           document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
-          // console.log(visualMarkers[0].position.lat());
-          // console.log(visualMarkers[0].position.lng());
         });
 
       // Listens for the submission of the pointForm button which then creates a marker element containing coordinates (lat, lng), pointTitle, pointDescription, category, and pointImage
@@ -311,62 +247,12 @@
             }
         })
         .then((result)=>{
-          window.location.href = "/api/maps/" + result.mapID; //this changes the browser location (url location). AJAX + Routing is messy. an ajax call doesent allow you to redirect you have to send over data with the ajax. AJAX needs to send json
+          window.location.href = "/api/maps/" + result.mapID; //this changes the browser location (url location).
         })
         .catch((error)=>{
-          // console.log('error:',error);
+          console.error(error)
         });
       });
-
-      function addMarker(props) {
-
-        const marker = new google.maps.Marker({
-          position:props.coordinates,
-          map:map,
-          icon: props.iconImage,
-        });
-
-        // sends newly created marker into visualMarkers array
-        visualMarkers.push(marker);
-
-
-        // this function prevents multiple unsaved markers from showing on the map
-        function visualMarkerLimiter() {
-
-          // if the visualmarkers and markers lengths differ by more than one and markers is empty then it will simply delete the first visual marker and display the last
-          if (visualMarkers.length - markers.length > 1 && markers.length === 0) {
-            // console.log("This is showing because the markers.length is 0");
-            removeMarkers();
-            visualMarkers.splice(0, 1);
-            setMapOnAll(map);
-          }
-
-          // this contains the validated visual markers (populated by the for loops below) which will then be pushed to markers
-          const validatedVisualMarkers = [];
-
-          if (visualMarkers.length - markers.length > 1 && markers.length >= 1) {
-            for (let j = 0; j < visualMarkers.length; j++) {
-              for (let i = 0; i < markers.length; i++) {
-                // for ease of validating that the marker and visualmarker lats and lngs are matching
-                // console.log("visualMarker lat:", visualMarkers[j].position.lat().toFixed(4));
-                // console.log("markers lat:", parseFloat(markers[i].coordinates.lat).toFixed(4));
-                // console.log("visualMarker lng:", visualMarkers[j].position.lng().toFixed(4));
-                // console.log("markers lng:", parseFloat(markers[i].coordinates.lng).toFixed(4));
-
-                if (visualMarkers[j].position.lat().toFixed(4) === parseFloat(markers[i].coordinates.lat).toFixed(4) && visualMarkers[j].position.lng().toFixed(4) === parseFloat(markers[i].coordinates.lng).toFixed(4)) {
-                  console.log("They matched!");
-                  validatedVisualMarkers.push(visualMarkers[j]);
-                }
-              }
-            }
-            removeMarkers();
-            // HUGE NOTE HERE - READ THIS - SET visualMarkers to a let variable instead of a const or this will fail
-            visualMarkers = validatedVisualMarkers;
-            setMapOnAll(map);
-          }
-        };
-        visualMarkerLimiter();
-      }
     }
 </script>
 

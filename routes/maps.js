@@ -7,7 +7,7 @@
 
 const express = require('express');
 const router  = express.Router();
-const generateRandomString = require('../public/scripts/generate_string.js');
+const generateRandomString = require('../public/scripts/app.js');
 
 
 

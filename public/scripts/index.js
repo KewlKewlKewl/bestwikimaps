@@ -45,7 +45,6 @@ $(document).ready(function(){
 
   $("body").on('click',".favouriteIcon",function(event){
     event.preventDefault();
-    console.log('clicked');
     //console.log(this.getAttribute("data-id"));
     const map_id = this.getAttribute("data-id");
     //console.log("event:", event);
@@ -58,12 +57,10 @@ $(document).ready(function(){
   })
 
   const loadImgs = function() {
-    console.log("loadImgs inside???");
     let url;
     let functionToUse;
     let faveBool;
     const loggedInSection = document.getElementsByTagName("SECTION")[0].id;
-    console.log(loggedInSection);
     if (loggedInSection === "lastFavouritedMap") {
       url = '/api/maps/favourite';
       functionToUse = renderLastFavourited;
@@ -83,12 +80,10 @@ $(document).ready(function(){
       //where 'result' is an array:
       //result[0] = 1 object with the last favourited map
       //result[1] = 3 objects where each is a map
-      console.log("result in ajax then:", result);
       functionToUse(result[0]);
     })
     .then(()=> {
     //.then (//add another get request here for the 3 maps??)
-      console.log("line58");
       $.get("/api/maps/rowOf3", (resultsArray) => {
         renderRowOf3Maps(resultsArray, faveBool);
       });

@@ -41,12 +41,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <!-- <script type="text/javascript" src="scripts/create_map.js"></script> -->
 <script type="text/javascript" src="/scripts/_header.js"></script>
+<script type="text/javascript" src="/scripts/app.js"></script>
 </head>
 
 <body>
   <%- include('./_header'); %>
-
-
   <div id='mapAndForms'>
     <!-- Map -->
     <div id="map">
@@ -100,63 +99,8 @@
   let visualMarkers = [];
 
   const queryData = <%- JSON.stringify(queryObj) %> //passes query object (templateVars) to <script> and allows us to use it in our JS. I DO NOT KNOW WHY THIS IS ERRORED, code works fine with nothing consoling with issues
-  // console.log('qdata:',queryData)
   //Array of markers
   const markers = [];
-
-  // code to take queryData from server and for loop to display markers
-
-
-  // FAEZ CODE DELETE POINTS
-
-  // sets all of the points back on the map
-  function setMapOnAll(map) {
-    for (let i = 0; i < visualMarkers.length; i++) {
-      visualMarkers[i].setMap(map);
-    }
-  }
-
-  function removeMarkers() {
-    for(let i = 0; i < visualMarkers.length; i++){
-      visualMarkers[i].setMap(null);
-    }
-  }
-
-
-  // this generates the individual point elements within div tags (displayed in #pointsList)
-  const generatePointsList = function(markers){
-    console.log("generatePointsList", markers);
-
-    let t = `<tr>
-                <th >Title</th>
-                <th>Description</th>
-                <th id = 'latHeader'>Lat</th>
-                <th id = 'longHeader'>Long</th>
-                <th>Category</th>
-                <th>Image</th>
-                <th>Delete Point</th>
-                <th>Save Point</th>
-            </tr>`;
-    for (let i = 0; i < markers.length; i++){
-      if (!markers[i].pointImage) {
-        markers[i].pointImage = 'https://i.pinimg.com/474x/b4/7b/96/b47b9623ba93546b9a2c412e1abe9306.jpg'; //if db or user does not have a image -> marker image is given a default
-      }
-      let tr = `<tr id = "${markers[i].pointTitle}">`;
-      tr += "<td contenteditable='true' autofocus>"+markers[i].pointTitle+"</td>";
-      tr += "<td  contenteditable='true'>"+markers[i].pointDescription+"</td>";
-      tr += "<td id = 'lat'>"+markers[i].coordinates.lat+"</td>";
-      tr += "<td id = 'long'>"+markers[i].coordinates.lng+"</td>";
-      tr += "<td  contenteditable='true'>"+markers[i].category+"</td>";
-      tr += `<td id='point-image'><a href='${markers[i].pointImage}' target='_blank'><img height=75px width=100px src='${markers[i].pointImage}'></a></td>`;
-      tr += "<td>"+`<input type='button' value='Delete Point' class='removeItem'>`+"</td>";
-      tr += "<td>"+`<input type='button' value='Save Point' class='editItem'>`+"</td>";
-      // tr += "<td>"+"<input type='button' value='Delete Row' onclick='deleteRowFunction()'>"+"</td>";
-      // tr += "<td>"+"delete icon here"+"</td>";
-      tr += "</tr>";
-      t += tr;
-    }
-      document.getElementById("pointsList").innerHTML = t;
-    };
 
   // simple reference to the pointsTable
     const pointsTable = document.getElementById('pointsList');
@@ -171,7 +115,6 @@
 
       // if you did click on the removeItem button - this determines the point title of the row we just deleted to also remove it from the markers table
       const deletedPointTitle = event.target.parentNode.parentNode.id;
-      console.log("deletedPointTitle:", deletedPointTitle);
 
       // this counter keeps track of the marker index that we removed from the markers array
       let removedMarkerIndex = 0;
@@ -180,36 +123,19 @@
       for (let i = 0; i < markers.length; i++) {
         if (markers[i].pointTitle === deletedPointTitle) {
           removedMarkerIndex = i;
-          console.log('removed marker index:', removedMarkerIndex);
           // console.log(removedMarkerIndex);
         }
       }
 
-
       // saves the respect lat and lng for the removed marker from the markers array
       let markerLat = markers[removedMarkerIndex].coordinates.lat;
       let markerLng = markers[removedMarkerIndex].coordinates.lng;
-
-      // console.log("markerLat:", parseFloat(markerLat).toFixed(4));
-      // console.log("visualMarker Lat:", visualMarkers[0].position.lat().toFixed(4));
-      // console.log("markerLng:", parseFloat(markerLng).toFixed(4));
-      // console.log("visualMarker Lng:", visualMarkers[0].position.lng().toFixed(4));
-      // console.log("visualMarkers array PRE-deletion:", visualMarkers);
-      console.log('PRE VISUAL MARKERS')
-      for (let elm of visualMarkers) {
-        console.log(elm.position.lat(), elm.position.lng())
-      }
-
 
       for (let j = 0; j < visualMarkers.length; j++) {
         // the marketLat and markerLng are not fixed length or integer types so the only way to have these equal the coords for the visualMarker is to convert to float then to fixed decimal places
         if (parseFloat(markerLat).toFixed(4) === visualMarkers[j].position.lat().toFixed(4) && parseFloat(markerLng).toFixed(4) === visualMarkers[j].position.lng().toFixed(4)) {
           removeMarkers();
           visualMarkers.splice(j, 1);
-          console.log('POST VISUAL MARKERS')
-          for (let elm of visualMarkers) {
-            console.log(elm.position.lat(), elm.position.lng())
-          }
           setMapOnAll(map);
         }
       }
@@ -227,28 +153,6 @@
 
     });
 
-    console.log('original markers;', markers)
-
-    const iconSelector = (category) => {
-        const iconOptions = {
-          Food: "https://img.icons8.com/office/40/000000/hamburger.png",
-          Shopping: "https://img.icons8.com/office/40/000000/mastercard-credit-card.png",
-          Nature: "https://img.icons8.com/office/40/000000/forest.png",
-          Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
-        };
-        const iconOptionKeys = Object.keys(iconOptions);
-
-        for (const key of iconOptionKeys) {
-          console.log("key:", key);
-          console.log("category:", category);
-
-          if (category === key) {
-            console.log("they match!");
-            return iconOptions[key];
-          }
-        }
-      };
-
 
     //EDIT POINT LOGIC
     pointsTable.addEventListener('click', (event) => {
@@ -258,8 +162,6 @@
       }
       const editedPointTitle = event.target.parentNode.parentNode.id;
       const htmlNodeArray = event.target.parentNode.parentNode.children
-      console.log(editedPointTitle)
-      console.log(htmlNodeArray)
       for (marker of markers) {
         if (marker.pointTitle === editedPointTitle) {
           marker.pointTitle = htmlNodeArray[0].innerHTML;
@@ -272,22 +174,14 @@
 
           for (let i = 0; i < visualMarkers.length; i++) {
             if (parseFloat(marker.coordinates.lat).toFixed(4) === visualMarkers[i].position.lat().toFixed(4) && parseFloat(marker.coordinates.lng).toFixed(4) === visualMarkers[i].position.lng().toFixed(4)) {
-              console.log("visual marker icon contents pre change:", visualMarkers[i].icon);
-              console.log("icon Selector Output:", iconSelector(marker.category));
               visualMarkers[i].icon = iconSelector(marker.category);
-              console.log("visual marker icon contents post change:", visualMarkers[i].icon);
             }
           }
         }
       }
       removeMarkers();
       setMapOnAll(map);
-      console.log("NEW TITLE:", event.target.parentNode.parentNode.id)
-      console.log('edited markers:', markers)
     })
-
-
-
 
     // Initializes the Google map based on currently hard-coded lat, long values
     function initMap() {
@@ -299,40 +193,16 @@
       //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
       map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
 
-      const iconSelector = (category) => {
-        const iconOptions = {
-          Food: "https://img.icons8.com/office/40/000000/hamburger.png",
-          Shopping: "https://img.icons8.com/office/40/000000/mastercard-credit-card.png",
-          Nature: "https://img.icons8.com/office/40/000000/forest.png",
-          Nightlife: "https://img.icons8.com/office/40/000000/dancing.png"
-        };
-        const iconOptionKeys = Object.keys(iconOptions);
-
-        for (const key of iconOptionKeys) {
-          console.log("key:", key);
-          console.log("category:", category);
-
-          if (category === key) {
-            console.log("they match!");
-            return iconOptions[key];
-          }
-        }
-      };
-
       for (let points of queryData) {
-        // console.log(points)
         markers.push({coordinates: {lat: Number(points.latitude), lng: Number(points.longitude)}, pointTitle: points.title.toString(), pointDescription: points.description.toString(), category: points.category.toString(), content: points.title, pointImage: points.point_image});
       }
 
       //Listen for click on map
       google.maps.event.addListener(map, 'click', function(event){
-          addMarker({coordinates:event.latLng, iconImage: iconSelector(document.getElementById("category").value)}); //Add marker
+          editMarker({coordinates:event.latLng, iconImage: iconSelector(document.getElementById("category").value)}); //Add marker
           // setMapOnAll(map);
           document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
-          console.log(visualMarkers[0].position.lat());
-          console.log(visualMarkers[0].position.lng());
       });
-
 
       // Listens for the submission of the pointForm button which then creates a markerElement containing coordinates (lat, lng), pointTitle, pointDescription
       document.getElementById("pointForm").addEventListener('submit',(event) => {
@@ -351,7 +221,6 @@
             pointImage: document.getElementById("point-image").value
           }
         );
-        // console.log(markers);
         generatePointsList(markers);
       });
 
@@ -374,93 +243,13 @@
         });
       });
 
-
       // Loop through markers
       for(let i = 0;i < markers.length;i++) {
-          addMarker(markers[i]);
+          editMarker(markers[i]);
       }
-
-      console.log('NEW NEW MARKERS:', visualMarkers)
 
       generatePointsList(markers);
-      console.log('outside markers', markers);
 
-
-      //Add Marker function
-      function addMarker(props) {
-        let marker;
-        if (!props.iconImage) {
-          const iconImage = iconSelector(props.category);
-
-          marker = new google.maps.Marker({
-              position:props.coordinates,
-              map:map,
-              icon:iconImage
-          });
-
-        } else {
-          marker = new google.maps.Marker({
-          position:props.coordinates,
-          map:map,
-          icon:props.iconImage
-          });
-        }
-
-          // sends newly created marker into visualMarkers array with the coordinates
-          visualMarkers.push(marker);
-
-          function visualMarkerLimiter() {
-
-          // if the visualmarkers and markers lengths differ by more than one and markers is empty then it will simply delete the first visual marker and display the last
-          if (visualMarkers.length - markers.length > 1 && markers.length === 0) {
-            // console.log("This is showing because the markers.length is 0");
-            removeMarkers();
-            visualMarkers.splice(0, 1);
-            setMapOnAll(map);
-          }
-
-          // this contains the validated visual markers (populated by the for loops below) which will then be pushed to markers
-          const validatedVisualMarkers = [];
-
-          if (visualMarkers.length - markers.length > 1 && markers.length >= 1) {
-            for (let j = 0; j < visualMarkers.length; j++) {
-              for (let i = 0; i < markers.length; i++) {
-                // for ease of validating that the marker and visualmarker lats and lngs are matching
-                // console.log("visualMarker lat:", visualMarkers[j].position.lat().toFixed(4));
-                // console.log("markers lat:", parseFloat(markers[i].coordinates.lat).toFixed(4));
-                // console.log("visualMarker lng:", visualMarkers[j].position.lng().toFixed(4));
-                // console.log("markers lng:", parseFloat(markers[i].coordinates.lng).toFixed(4));
-
-                if (visualMarkers[j].position.lat().toFixed(4) === parseFloat(markers[i].coordinates.lat).toFixed(4) && visualMarkers[j].position.lng().toFixed(4) === parseFloat(markers[i].coordinates.lng).toFixed(4)) {
-                  console.log("They matched!");
-                  validatedVisualMarkers.push(visualMarkers[j]);
-                }
-              }
-            }
-            removeMarkers();
-            // HUGE NOTE HERE - READ THIS - SET visualMarkers to a let variable instead of a const or this will fail
-            visualMarkers = validatedVisualMarkers;
-            setMapOnAll(map);
-          }
-        };
-        visualMarkerLimiter();
-
-          console.log("just updated visualMarkers:", visualMarkers)
-
-          // if(props.iconImage) {  //Check for custom icon
-          //   marker.setIcon(props.iconImage); //Set icon image
-          // }
-
-          if(props.content) { //Check content
-            let infoWindow = new google.maps.InfoWindow({
-              content:props.content
-            });
-
-            marker.addListener('click', function() {
-              infoWindow.open(map,marker);
-            });
-          }
-      }
   }
 </script>
 
