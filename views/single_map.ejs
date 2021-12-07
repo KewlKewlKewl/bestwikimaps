@@ -4,32 +4,27 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Main Page Style Sheet -->
-  <!-- <link rel="stylesheet" type="text/css" href="/styles/map_display.css"> -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Regular Text Font: -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 
-<!-- <h1> Your New Map Text Style: -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
 
-<!-- All Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
-<!-- Single_Map Styling-->
-<link rel="stylesheet" type="text/css" href="/styles/single_map.css">
-<!-- Header Styling -->
-<link rel="stylesheet" href="/styles/_header.css" type="text/css"/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:ital,wght@0,300;0,400;1,900&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:ital,wght@0,300;0,400;1,900&family=Oxygen:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+  <link rel="stylesheet" type="text/css" href="/styles/single_map.css">
+
+  <link rel="stylesheet" href="/styles/_header.css" type="text/css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:ital,wght@0,300;0,400;1,900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lato:ital,wght@0,300;0,400;1,900&family=Oxygen:wght@700&display=swap" rel="stylesheet">
 
   <title>Single Map: View</title>
   <style>
@@ -38,9 +33,8 @@
         width: 80%;
     }
   </style>
-<!-- Requiring jQuery from host server -->
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<!-- <script type="text/javascript" src="scripts/create_map.js"></script> -->
 <script type="text/javascript" src="/scripts/_header.js"></script>
 <script type="text/javascript" src="/scripts/app.js"></script>
 </head>
@@ -67,8 +61,6 @@
     </table>
 
     <% if (user) { %>
-    <!-- Maps Delete -->
-    <!-- Maps Edit (Leads to adding or deleting pins on the selected map) -->
     <div id = 'editDeleteButtons'>
     <form id='edit-map' method='GET' ACTION='/api/maps/<%= queryObj[0].map_id %>/edit'>
       <button type='submit'>EDIT MAP</button>
@@ -101,13 +93,12 @@
   }
     // Initializes the Google map based on currently hard-coded lat, long values
     function initMap() {
-      //set up initial map for New Orleans as default
       const options = {  // Creates map options to add to the default map.
           zoom:14,
           center:{lat:51.0447,lng:-114.0719}
       }
-      //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
-      let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
+
+      let map = new google.maps.Map(document.getElementById('map'), options);
 
       // Loop through markers
       for(var i = 0;i < markers.length;i++) {

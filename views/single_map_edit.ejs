@@ -4,24 +4,17 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Regular Text Font: -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
-
-  <!-- <h1> Your New Map Text Style: -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
-
-  <!-- All Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
-  <!-- Single_Map Styling-->
+
   <link rel="stylesheet" type="text/css" href="/styles/single_map_edit.css">
-  <!-- Header Styling -->
   <link rel="stylesheet" href="/styles/_header.css" type="text/css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,9 +30,8 @@
         width: 80%;
     }
   </style>
-<!-- Requiring jQuery from host server -->
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<!-- <script type="text/javascript" src="scripts/create_map.js"></script> -->
 <script type="text/javascript" src="/scripts/_header.js"></script>
 <script type="text/javascript" src="/scripts/app.js"></script>
 </head>
@@ -88,9 +80,6 @@
   <div id="marker_coords">
   </div>
 
-  <!-- This is where all saved points are displayed -->
-
-
   <!-- SCRIPTS -->
 <script>
 
@@ -108,7 +97,6 @@
     // event listener for clicks onto any "delete point" button - removes the HTML element and marker from markers array (so it's not submitted to the DB when we save the map)
     pointsTable.addEventListener('click', (event) => {
 
-      // if you click anywhere in the table aside from the removeItem button - it does nothing
       if (!event.target.classList.contains('removeItem')) {
         return;
       }
@@ -142,10 +130,7 @@
       // this removes the marker (aka point) we deleted from the markers array
       markers.splice(removedMarkerIndex, 1);
 
-      // I think* this is for the button's functionality but I haven't noticed it actually do anything yet
       event.preventDefault();
-
-      // This re-sets the map with points
 
       // this deletes the actual HTML element from the DOM
       event.target.parentNode.parentNode.remove();
@@ -155,7 +140,6 @@
 
     //EDIT POINT LOGIC
     pointsTable.addEventListener('click', (event) => {
-      // if you click anywhere in the table aside from the removeItem button - it does nothing
       if (!event.target.classList.contains('editItem')) {
         return;
       }
@@ -187,8 +171,8 @@
           zoom:14,
           center:{lat:51.0447,lng:-114.0719}
       }
-      //let map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
-      map = new google.maps.Map(document.getElementById('map'), options); //Creates the map and includes the options.
+
+      map = new google.maps.Map(document.getElementById('map'), options);
 
       for (let points of queryData) {
         markers.push({coordinates: {lat: Number(points.latitude), lng: Number(points.longitude)}, pointTitle: points.title.toString(), pointDescription: points.description.toString(), category: points.category.toString(), content: points.title, pointImage: points.point_image});
