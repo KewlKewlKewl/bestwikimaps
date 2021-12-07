@@ -62,7 +62,6 @@ function addMarker(props) {
 
     // if the visualmarkers and markers lengths differ by more than one and markers is empty then it will simply delete the first visual marker and display the last
     if (visualMarkers.length - markers.length > 1 && markers.length === 0) {
-      // console.log("This is showing because the markers.length is 0");
       removeMarkers();
       visualMarkers.splice(0, 1);
       setMapOnAll(map);
@@ -74,14 +73,8 @@ function addMarker(props) {
     if (visualMarkers.length - markers.length > 1 && markers.length >= 1) {
       for (let j = 0; j < visualMarkers.length; j++) {
         for (let i = 0; i < markers.length; i++) {
-          // for ease of validating that the marker and visualmarker lats and lngs are matching
-          // console.log("visualMarker lat:", visualMarkers[j].position.lat().toFixed(4));
-          // console.log("markers lat:", parseFloat(markers[i].coordinates.lat).toFixed(4));
-          // console.log("visualMarker lng:", visualMarkers[j].position.lng().toFixed(4));
-          // console.log("markers lng:", parseFloat(markers[i].coordinates.lng).toFixed(4));
 
           if (visualMarkers[j].position.lat().toFixed(4) === parseFloat(markers[i].coordinates.lat).toFixed(4) && visualMarkers[j].position.lng().toFixed(4) === parseFloat(markers[i].coordinates.lng).toFixed(4)) {
-            console.log("They matched!");
             validatedVisualMarkers.push(visualMarkers[j]);
           }
         }
@@ -121,7 +114,6 @@ function editMarker(props) {
 
     // if the visualmarkers and markers lengths differ by more than one and markers is empty then it will simply delete the first visual marker and display the last
     if (visualMarkers.length - markers.length > 1 && markers.length === 0) {
-      // console.log("This is showing because the markers.length is 0");
       removeMarkers();
       visualMarkers.splice(0, 1);
       setMapOnAll(map);
