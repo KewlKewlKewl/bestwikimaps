@@ -111,16 +111,7 @@
   let visualMarkers = [];
 
   //Array of marker data (this is what's later inserted into the points DB so it has to contain only what we want saved)
-  const markers = [
-    // Sample Marker Data
-      // {
-      //     coordinates:{lat:29.9841,lng:-90.1529},
-      //     iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-      //     pointTitle:'test1',
-      //     pointDescription:'test1',
-      //     category:'Food'
-      // }
-  ];
+  const markers = [];
 
     // simple to access reference to the pointsTable (shown above)
     const pointsTable = document.getElementById('pointsList');
@@ -135,7 +126,6 @@
 
       // if you did click on the removeItem button - this determines the point title of the row we just deleted to also remove it from the markers table
       const deletedPointTitle = event.target.parentNode.parentNode.id;
-      // console.log("deletedPointTitle:", deletedPointTitle);
 
       // this counter keeps track of the marker index that we removed from the markers array
       let removedMarkerIndex = 0;
@@ -145,8 +135,6 @@
       for (let i = 0; i < markers.length; i++) {
         if (markers[i].pointTitle === deletedPointTitle) {
           removedMarkerIndex = i;
-          // console.log(markers);
-          // console.log(removedMarkerIndex);
         }
       }
 

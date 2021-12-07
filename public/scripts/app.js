@@ -133,14 +133,8 @@ function editMarker(props) {
     if (visualMarkers.length - markers.length > 1 && markers.length >= 1) {
       for (let j = 0; j < visualMarkers.length; j++) {
         for (let i = 0; i < markers.length; i++) {
-          // for ease of validating that the marker and visualmarker lats and lngs are matching
-          // console.log("visualMarker lat:", visualMarkers[j].position.lat().toFixed(4));
-          // console.log("markers lat:", parseFloat(markers[i].coordinates.lat).toFixed(4));
-          // console.log("visualMarker lng:", visualMarkers[j].position.lng().toFixed(4));
-          // console.log("markers lng:", parseFloat(markers[i].coordinates.lng).toFixed(4));
 
           if (visualMarkers[j].position.lat().toFixed(4) === parseFloat(markers[i].coordinates.lat).toFixed(4) && visualMarkers[j].position.lng().toFixed(4) === parseFloat(markers[i].coordinates.lng).toFixed(4)) {
-            console.log("They matched!");
             validatedVisualMarkers.push(visualMarkers[j]);
           }
         }
@@ -152,12 +146,6 @@ function editMarker(props) {
     }
   };
   visualMarkerLimiter();
-
-    console.log("just updated visualMarkers:", visualMarkers)
-
-    // if(props.iconImage) {  //Check for custom icon
-    //   marker.setIcon(props.iconImage); //Set icon image
-    // }
 
     if(props.content) { //Check content
       let infoWindow = new google.maps.InfoWindow({

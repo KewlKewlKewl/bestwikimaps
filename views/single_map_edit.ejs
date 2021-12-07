@@ -123,7 +123,6 @@
       for (let i = 0; i < markers.length; i++) {
         if (markers[i].pointTitle === deletedPointTitle) {
           removedMarkerIndex = i;
-          // console.log(removedMarkerIndex);
         }
       }
 
@@ -168,7 +167,6 @@
           marker.pointDescription = htmlNodeArray[1].innerHTML;
           marker.category = htmlNodeArray[4].innerHTML;
           marker.content = htmlNodeArray[0].innerHTML;
-          // iconSelector(htmlNodeArray[4].innerHTML);
 
           event.target.parentNode.parentNode.id = htmlNodeArray[0].innerHTML;
 
@@ -185,7 +183,6 @@
 
     // Initializes the Google map based on currently hard-coded lat, long values
     function initMap() {
-      //set up initial map for New Orleans as default
       const options = {  // Creates map options to add to the default map.
           zoom:14,
           center:{lat:51.0447,lng:-114.0719}
@@ -200,15 +197,12 @@
       //Listen for click on map
       google.maps.event.addListener(map, 'click', function(event){
           editMarker({coordinates:event.latLng, iconImage: iconSelector(document.getElementById("category").value)}); //Add marker
-          // setMapOnAll(map);
           document.getElementById("marker_coords").innerHTML=event.latLng.toUrlValue();
       });
 
       // Listens for the submission of the pointForm button which then creates a markerElement containing coordinates (lat, lng), pointTitle, pointDescription
       document.getElementById("pointForm").addEventListener('submit',(event) => {
         event.preventDefault();
-        //console.log("event", event);
-        //console.log("pointTitle", document.getElementById("pointTitle").value);
         markers.push(
           {
             coordinates: {
@@ -239,7 +233,7 @@
           window.location.href = "/api/maps/" + result.mapID; //this forces the redirect
         })
         .catch((error)=>{
-          console.log('error:',error);
+          console.error(error);
         });
       });
 
